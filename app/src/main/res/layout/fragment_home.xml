@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".favorites.view.HomeFragment">
+
+        <TextView
+            android:id="@+id/titleTv"
+            style="@style/TextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/home"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/todayTv"
+            style="@style/TextViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/today"
+            android:textAlignment="textStart"
+            android:textColor="@color/small_text_light"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toStartOf="@id/todayDateTv"
+            app:layout_constraintStart_toStartOf="@id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@id/titleTv" />
+
+        <TextView
+            android:id="@+id/todayDateTv"
+            style="@style/TextViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:textColor="@color/small_text"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toBottomOf="@id/todayTv"
+            app:layout_constraintEnd_toEndOf="@id/endGuideline"
+            app:layout_constraintStart_toEndOf="@id/todayTv"
+            app:layout_constraintTop_toTopOf="@id/todayTv"
+            tools:text="May 28,2021" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/hourlyDegreeRv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/todayTv"
+            tools:listitem="@layout/hourly_degree_list_item" />
+
+        <TextView
+            android:id="@+id/nextForecastTv"
+            style="@style/TextViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/next_forecast"
+            android:textAlignment="textStart"
+            android:textColor="@color/small_text_light"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="@id/endGuideline"
+            app:layout_constraintEnd_toStartOf="@id/todayDateTv"
+            app:layout_constraintStart_toStartOf="@id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@id/hourlyDegreeRv" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/nextForecastRv"
+            android:layout_width="0dp"
+
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/endGuideline"
+            app:layout_constraintStart_toStartOf="@id/startGuideline"
+            app:layout_constraintTop_toBottomOf="@id/nextForecastTv"
+            tools:listitem="@layout/next_forecast_list_item" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/startGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="22dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/endGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="22dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
