@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nextForecastCard"
+    android:id="@+id/alertCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -16,40 +16,44 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/weatherStateLA"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+        <TextView
+            android:id="@+id/toDateTv"
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/degreeTv"
+            app:layout_constraintStart_toEndOf="@id/dash"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2:52 AM\n26 Feb" />
+
+        <TextView
+            android:id="@+id/dash"
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dash"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/toDateTv"
+            app:layout_constraintStart_toEndOf="@id/fromDateTv"
+
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/degreeTv"
+            android:id="@+id/fromDateTv"
             style="@style/TextViewStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@id/weatherStateLA"
-            app:layout_constraintEnd_toStartOf="@id/weatherStateLA"
-            app:layout_constraintStart_toEndOf="@id/dateTv"
-            app:layout_constraintTop_toTopOf="@id/weatherStateLA"
-            tools:text="15 °" />
-
-        <TextView
-            android:id="@+id/dateTv"
-            style="@style/TextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="@id/weatherStateLA"
-            app:layout_constraintEnd_toStartOf="@id/degreeTv"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/dash"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/weatherStateLA"
-            tools:text="Friday\nMay,28" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2:52 AM\n26 Feb" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

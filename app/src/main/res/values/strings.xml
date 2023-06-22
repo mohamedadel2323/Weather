@@ -14,4 +14,7 @@
     <string name="cloud">Cloud</string>
     <string name="ultra_violet">Ultra Violet</string>
     <string name="visibility">Visibility</string>
+    <string name="alerts">Alerts</string>
+    <string name="favorites">Favorites</string>
+    <string name="dash">-</string>
 </resources>
