@@ -7,339 +7,356 @@
 
     </data>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TextView
+            android:layout_marginTop="1dp"
+            android:padding="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/item_back"
+            android:id="@+id/homeTitleTv"
+            style="@style/TextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".favorites.view.HomeFragment">
+            android:text="@string/home"
+            android:textStyle="normal"
+            app:layout_constraintBottom_toTopOf="@id/homeScrollView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/homeTitleTv"
-                style="@style/TextViewStyle"
+        <ScrollView
+            android:id="@+id/homeScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/homeTitleTv">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/home"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                tools:context=".favorites.view.HomeFragment">
 
-            <TextView
-                android:id="@+id/todayTv"
-                style="@style/TextViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/today"
-                android:textAlignment="textStart"
-                android:textColor="@color/small_text_light"
-                android:textSize="20sp"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toStartOf="@id/todayDateTv"
-                app:layout_constraintStart_toStartOf="@id/startGuideline"
-                app:layout_constraintTop_toBottomOf="@id/homeTitleTv" />
+                <TextView
+                    android:id="@+id/todayTv"
+                    style="@style/TextViewStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/today"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/small_text_light"
+                    android:textSize="20sp"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toStartOf="@id/todayDateTv"
+                    app:layout_constraintStart_toStartOf="@id/startGuideline"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/todayDateTv"
-                style="@style/TextViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="textEnd"
-                android:textColor="@color/small_text"
-                android:textSize="14sp"
-                android:textStyle="normal"
-                app:layout_constraintBottom_toBottomOf="@id/todayTv"
-                app:layout_constraintEnd_toEndOf="@id/endGuideline"
-                app:layout_constraintStart_toEndOf="@id/todayTv"
-                app:layout_constraintTop_toTopOf="@id/todayTv"
-                tools:text="May 28,2021" />
+                <TextView
+                    android:id="@+id/todayDateTv"
+                    style="@style/TextViewStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/small_text"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    app:layout_constraintBottom_toBottomOf="@id/todayTv"
+                    app:layout_constraintEnd_toEndOf="@id/endGuideline"
+                    app:layout_constraintStart_toEndOf="@id/todayTv"
+                    app:layout_constraintTop_toTopOf="@id/todayTv"
+                    tools:text="May 28,2021" />
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/todayStateAnimation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="@id/endGuideline"
-                app:layout_constraintStart_toStartOf="@id/startGuideline"
-                app:layout_constraintTop_toBottomOf="@id/todayTv"
-                app:lottie_autoPlay="true"
-                app:lottie_loop="true"
-                app:lottie_rawRes="@raw/storm" />
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/todayStateAnimation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/endGuideline"
+                    app:layout_constraintStart_toStartOf="@id/startGuideline"
+                    app:layout_constraintTop_toBottomOf="@id/todayTv"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/storm" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/dayStatusCv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="15dp"
-                app:layout_constraintEnd_toEndOf="@id/endGuideline"
-                app:layout_constraintStart_toStartOf="@id/startGuideline"
-                app:layout_constraintTop_toBottomOf="@id/todayStateAnimation">
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/dayStatusCv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:cardCornerRadius="15dp"
+                    app:layout_constraintEnd_toEndOf="@id/endGuideline"
+                    app:layout_constraintStart_toStartOf="@id/startGuideline"
+                    app:layout_constraintTop_toBottomOf="@id/todayStateAnimation">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/rv_item"
+                        android:paddingTop="16dp"
+                        android:paddingBottom="16dp">
+
+                        <ImageView
+                            android:id="@+id/pressureIconIv"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/pressure_icon"
+                            app:layout_constraintEnd_toStartOf="@id/humidityIconIv"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/pressureValueTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1021 hpa"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toEndOf="@id/pressureIconIv"
+                            app:layout_constraintStart_toStartOf="@id/pressureIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/pressureIconIv" />
+
+                        <TextView
+                            android:id="@+id/pressureTitleTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/pressure"
+                            android:textSize="11sp"
+                            android:textStyle="normal"
+                            app:layout_constraintEnd_toEndOf="@id/pressureIconIv"
+                            app:layout_constraintStart_toStartOf="@id/pressureIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/pressureValueTv" />
+
+                        <ImageView
+                            android:id="@+id/humidityIconIv"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/humidity_icon"
+                            app:layout_constraintEnd_toStartOf="@id/windIconIv"
+                            app:layout_constraintStart_toEndOf="@id/pressureIconIv"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/humidityValueTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="30 %"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toEndOf="@id/humidityIconIv"
+                            app:layout_constraintStart_toStartOf="@id/humidityIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/humidityIconIv" />
+
+                        <TextView
+                            android:id="@+id/humidityTitleTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/humidity"
+                            android:textSize="11sp"
+                            android:textStyle="normal"
+                            app:layout_constraintEnd_toEndOf="@id/humidityIconIv"
+                            app:layout_constraintStart_toStartOf="@id/humidityIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/humidityValueTv" />
+
+                        <ImageView
+                            android:id="@+id/windIconIv"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/wind_icon"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/humidityIconIv"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/windValueTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2.06 m/s"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toEndOf="@id/windIconIv"
+                            app:layout_constraintStart_toStartOf="@id/windIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/windIconIv" />
+
+                        <TextView
+                            android:id="@+id/windTitleTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/wind"
+                            android:textSize="11sp"
+                            android:textStyle="normal"
+                            app:layout_constraintEnd_toEndOf="@id/windIconIv"
+                            app:layout_constraintStart_toStartOf="@id/windIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/windValueTv" />
+
+                        <ImageView
+                            android:id="@+id/cloudIconIv"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_marginTop="16dp"
+                            android:src="@drawable/cloud_icon"
+                            app:layout_constraintEnd_toStartOf="@id/ultraVioletIconIv"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/pressureTitleTv" />
+
+                        <TextView
+                            android:id="@+id/cloudValueTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="13 %"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toEndOf="@id/cloudIconIv"
+                            app:layout_constraintStart_toStartOf="@id/cloudIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/cloudIconIv" />
+
+                        <TextView
+                            android:id="@+id/cloudTitleTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/cloud"
+                            android:textSize="11sp"
+                            android:textStyle="normal"
+                            app:layout_constraintEnd_toEndOf="@id/cloudIconIv"
+                            app:layout_constraintStart_toStartOf="@id/cloudIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/cloudValueTv" />
+
+                        <ImageView
+                            android:id="@+id/ultraVioletIconIv"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/ultraviolet_icon"
+                            app:layout_constraintBottom_toBottomOf="@id/cloudIconIv"
+                            app:layout_constraintEnd_toStartOf="@id/visibilityIconIv"
+                            app:layout_constraintStart_toEndOf="@id/cloudIconIv"
+                            app:layout_constraintTop_toTopOf="@id/cloudIconIv" />
+
+                        <TextView
+                            android:id="@+id/ultraVioletValueTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1021 hpa"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toEndOf="@id/ultraVioletIconIv"
+                            app:layout_constraintStart_toStartOf="@id/ultraVioletIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/ultraVioletIconIv" />
+
+                        <TextView
+                            android:id="@+id/ultraVioletTitleTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ultra_violet"
+                            android:textSize="11sp"
+                            android:textStyle="normal"
+                            app:layout_constraintEnd_toEndOf="@id/ultraVioletIconIv"
+                            app:layout_constraintStart_toStartOf="@id/ultraVioletIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/ultraVioletValueTv" />
+
+                        <ImageView
+                            android:id="@+id/visibilityIconIv"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/visibility_icon"
+                            app:layout_constraintBottom_toBottomOf="@id/cloudIconIv"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/ultraVioletIconIv"
+                            app:layout_constraintTop_toTopOf="@id/cloudIconIv" />
+
+                        <TextView
+                            android:id="@+id/visibilityValueTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="1021 hpa"
+                            android:textSize="11sp"
+                            app:layout_constraintEnd_toEndOf="@id/visibilityIconIv"
+                            app:layout_constraintStart_toStartOf="@id/visibilityIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/visibilityIconIv" />
+
+                        <TextView
+                            android:id="@+id/visibilityTitleTv"
+                            style="@style/TextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/visibility"
+                            android:textSize="11sp"
+                            android:textStyle="normal"
+                            app:layout_constraintEnd_toEndOf="@id/visibilityIconIv"
+                            app:layout_constraintStart_toStartOf="@id/visibilityIconIv"
+                            app:layout_constraintTop_toBottomOf="@id/visibilityValueTv" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/hourlyDegreeRv"
                     android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dayStatusCv"
+                    tools:listitem="@layout/hourly_degree_list_item" />
+
+
+                <TextView
+                    android:id="@+id/nextForecastTv"
+                    style="@style/TextViewStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/next_forecast"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/small_text_light"
+                    android:textSize="20sp"
+                    android:textStyle="normal"
+                    app:layout_constraintEnd_toEndOf="@id/endGuideline"
+                    app:layout_constraintEnd_toStartOf="@id/todayDateTv"
+                    app:layout_constraintStart_toStartOf="@id/startGuideline"
+                    app:layout_constraintTop_toBottomOf="@id/hourlyDegreeRv" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/nextForecastRv"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:background="@color/rv_item"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp">
+                    android:layout_marginTop="16dp"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/endGuideline"
+                    app:layout_constraintStart_toStartOf="@id/startGuideline"
+                    app:layout_constraintTop_toBottomOf="@id/nextForecastTv"
+                    tools:listitem="@layout/next_forecast_list_item" />
 
-                    <ImageView
-                        android:id="@+id/pressureIconIv"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/pressure_icon"
-                        app:layout_constraintEnd_toStartOf="@id/humidityIconIv"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/startGuideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="22dp" />
 
-                    <TextView
-                        android:id="@+id/pressureValueTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1021 hpa"
-                        android:textSize="11sp"
-                        app:layout_constraintEnd_toEndOf="@id/pressureIconIv"
-                        app:layout_constraintStart_toStartOf="@id/pressureIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/pressureIconIv" />
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/endGuideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_end="22dp" />
 
-                    <TextView
-                        android:id="@+id/pressureTitleTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/pressure"
-                        android:textSize="11sp"
-                        android:textStyle="normal"
-                        app:layout_constraintEnd_toEndOf="@id/pressureIconIv"
-                        app:layout_constraintStart_toStartOf="@id/pressureIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/pressureValueTv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <ImageView
-                        android:id="@+id/humidityIconIv"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/humidity_icon"
-                        app:layout_constraintEnd_toStartOf="@id/windIconIv"
-                        app:layout_constraintStart_toEndOf="@id/pressureIconIv"
-                        app:layout_constraintTop_toTopOf="parent" />
+        </ScrollView>
 
-                    <TextView
-                        android:id="@+id/humidityValueTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="30 %"
-                        android:textSize="11sp"
-                        app:layout_constraintEnd_toEndOf="@id/humidityIconIv"
-                        app:layout_constraintStart_toStartOf="@id/humidityIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/humidityIconIv" />
-
-                    <TextView
-                        android:id="@+id/humidityTitleTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/humidity"
-                        android:textSize="11sp"
-                        android:textStyle="normal"
-                        app:layout_constraintEnd_toEndOf="@id/humidityIconIv"
-                        app:layout_constraintStart_toStartOf="@id/humidityIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/humidityValueTv" />
-
-                    <ImageView
-                        android:id="@+id/windIconIv"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/wind_icon"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/humidityIconIv"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/windValueTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2.06 m/s"
-                        android:textSize="11sp"
-                        app:layout_constraintEnd_toEndOf="@id/windIconIv"
-                        app:layout_constraintStart_toStartOf="@id/windIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/windIconIv" />
-
-                    <TextView
-                        android:id="@+id/windTitleTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/wind"
-                        android:textSize="11sp"
-                        android:textStyle="normal"
-                        app:layout_constraintEnd_toEndOf="@id/windIconIv"
-                        app:layout_constraintStart_toStartOf="@id/windIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/windValueTv" />
-
-                    <ImageView
-                        android:id="@+id/cloudIconIv"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginTop="16dp"
-                        android:src="@drawable/cloud_icon"
-                        app:layout_constraintEnd_toStartOf="@id/ultraVioletIconIv"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/pressureTitleTv" />
-
-                    <TextView
-                        android:id="@+id/cloudValueTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="13 %"
-                        android:textSize="11sp"
-                        app:layout_constraintEnd_toEndOf="@id/cloudIconIv"
-                        app:layout_constraintStart_toStartOf="@id/cloudIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/cloudIconIv" />
-
-                    <TextView
-                        android:id="@+id/cloudTitleTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/cloud"
-                        android:textSize="11sp"
-                        android:textStyle="normal"
-                        app:layout_constraintEnd_toEndOf="@id/cloudIconIv"
-                        app:layout_constraintStart_toStartOf="@id/cloudIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/cloudValueTv" />
-
-                    <ImageView
-                        android:id="@+id/ultraVioletIconIv"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/ultraviolet_icon"
-                        app:layout_constraintBottom_toBottomOf="@id/cloudIconIv"
-                        app:layout_constraintEnd_toStartOf="@id/visibilityIconIv"
-                        app:layout_constraintStart_toEndOf="@id/cloudIconIv"
-                        app:layout_constraintTop_toTopOf="@id/cloudIconIv" />
-
-                    <TextView
-                        android:id="@+id/ultraVioletValueTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1021 hpa"
-                        android:textSize="11sp"
-                        app:layout_constraintEnd_toEndOf="@id/ultraVioletIconIv"
-                        app:layout_constraintStart_toStartOf="@id/ultraVioletIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/ultraVioletIconIv" />
-
-                    <TextView
-                        android:id="@+id/ultraVioletTitleTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/ultra_violet"
-                        android:textSize="11sp"
-                        android:textStyle="normal"
-                        app:layout_constraintEnd_toEndOf="@id/ultraVioletIconIv"
-                        app:layout_constraintStart_toStartOf="@id/ultraVioletIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/ultraVioletValueTv" />
-
-                    <ImageView
-                        android:id="@+id/visibilityIconIv"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/visibility_icon"
-                        app:layout_constraintBottom_toBottomOf="@id/cloudIconIv"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/ultraVioletIconIv"
-                        app:layout_constraintTop_toTopOf="@id/cloudIconIv" />
-
-                    <TextView
-                        android:id="@+id/visibilityValueTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1021 hpa"
-                        android:textSize="11sp"
-                        app:layout_constraintEnd_toEndOf="@id/visibilityIconIv"
-                        app:layout_constraintStart_toStartOf="@id/visibilityIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/visibilityIconIv" />
-
-                    <TextView
-                        android:id="@+id/visibilityTitleTv"
-                        style="@style/TextViewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/visibility"
-                        android:textSize="11sp"
-                        android:textStyle="normal"
-                        app:layout_constraintEnd_toEndOf="@id/visibilityIconIv"
-                        app:layout_constraintStart_toStartOf="@id/visibilityIconIv"
-                        app:layout_constraintTop_toBottomOf="@id/visibilityValueTv" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/hourlyDegreeRv"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/dayStatusCv"
-                tools:listitem="@layout/hourly_degree_list_item" />
-
-
-            <TextView
-                android:id="@+id/nextForecastTv"
-                style="@style/TextViewStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/next_forecast"
-                android:textAlignment="textStart"
-                android:textColor="@color/small_text_light"
-                android:textSize="20sp"
-                android:textStyle="normal"
-                app:layout_constraintEnd_toEndOf="@id/endGuideline"
-                app:layout_constraintEnd_toStartOf="@id/todayDateTv"
-                app:layout_constraintStart_toStartOf="@id/startGuideline"
-                app:layout_constraintTop_toBottomOf="@id/hourlyDegreeRv" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/nextForecastRv"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginTop="16dp"
-                android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/endGuideline"
-                app:layout_constraintStart_toStartOf="@id/startGuideline"
-                app:layout_constraintTop_toBottomOf="@id/nextForecastTv"
-                tools:listitem="@layout/next_forecast_list_item" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/startGuideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="22dp" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/endGuideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_end="22dp" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
