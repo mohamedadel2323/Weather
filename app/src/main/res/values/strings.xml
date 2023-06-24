@@ -33,4 +33,9 @@
     <string name="temperature">Temperature</string>
     <string name="wind_speed">Wind Speed</string>
     <string name="notification">Notification</string>
+    <string name="add_alert">Add Alert</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="alert">Alert</string>
+    <string name="save">Save</string>
 </resources>
