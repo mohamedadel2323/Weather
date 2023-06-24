@@ -38,4 +38,6 @@
     <string name="to">To</string>
     <string name="alert">Alert</string>
     <string name="save">Save</string>
+    <string name="initial_step">Initial Step</string>
+    <string name="ok">OK</string>
 </resources>
