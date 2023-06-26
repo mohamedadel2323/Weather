@@ -40,4 +40,6 @@
     <string name="save">Save</string>
     <string name="initial_step">Initial Step</string>
     <string name="ok">OK</string>
+    <string name="unknown">Unknown</string>
+    <string name="we_can_t_fetch_your_location_nplease_allow_weather_to_access_your_location">We can\'t fetch your location\nplease allow weather to access your location</string>
 </resources>
