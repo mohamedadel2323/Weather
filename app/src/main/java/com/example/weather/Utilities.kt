@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.weather.model.pojo.WeatherResponse
+import com.example.weather.model.pojo.WeatherResponseEntity
 
 fun checkPermissions(context: Context): Boolean {
     return (ContextCompat.checkSelfPermission(
@@ -25,4 +27,8 @@ fun isLocationEnabled(context: Context): Boolean {
         LocationManager.NETWORK_PROVIDER
     )
 }
+
+fun WeatherResponse.toWeatherResponseEntity() = WeatherResponseEntity(
+    this.current, this.daily, this.hourly, this.lat, this.lon, this.timezone, this.timezone_offset
+)
 

@@ -1,7 +1,9 @@
 package com.example.weather.model
 
+import com.example.weather.database.LocalSource
 import com.example.weather.model.pojo.Location
 import com.example.weather.model.pojo.WeatherResponse
+import com.example.weather.model.pojo.WeatherResponseEntity
 import com.example.weather.network.RemoteSource
 import com.example.weather.shared_preferences.SettingsSharedPreferencesSource
 import kotlinx.coroutines.flow.Flow
@@ -10,16 +12,19 @@ import retrofit2.Response
 
 class Repository(
     private val sharedPreferencesSource: SettingsSharedPreferencesSource,
-    private val remoteSource: RemoteSource
+    private val remoteSource: RemoteSource,
+    private val localSource: LocalSource
 ) : RepoInterface {
 
     companion object {
         private var instance: Repository? = null
         fun getInstance(
-            sharedPreferencesSource: SettingsSharedPreferencesSource, remoteSource: RemoteSource
+            sharedPreferencesSource: SettingsSharedPreferencesSource,
+            remoteSource: RemoteSource,
+            localSource: LocalSource
         ): Repository {
             return instance ?: synchronized(this) {
-                val temp = Repository(sharedPreferencesSource, remoteSource)
+                val temp = Repository(sharedPreferencesSource, remoteSource, localSource)
                 instance = temp
                 temp
             }
@@ -44,9 +49,24 @@ class Repository(
         sharedPreferencesSource.setLong(longitude.toFloat())
     }
 
+    override fun getLocationOption() = sharedPreferencesSource.getLocationOption()
+
+    override fun setLocationOption(option: String) {
+        sharedPreferencesSource.setLocationOption(option)
+    }
+    override fun setNotificationOption(option: Boolean) {
+        sharedPreferencesSource.setNotificationOption(option)
+    }
+
     override suspend fun getWeather(location: Location): Flow<Response<WeatherResponse>> {
         return flowOf(remoteSource.getWeather(location))
     }
 
+    override suspend fun insertWeatherToDatabase(weatherResponse: WeatherResponseEntity) {
+        localSource.insertWeather(weatherResponse)
+    }
 
+    override suspend fun getWeatherFromDatabase(): Flow<WeatherResponseEntity> {
+        return localSource.getCurrentWeather()
+    }
 }

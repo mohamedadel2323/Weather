@@ -1,9 +1,9 @@
 package com.example.weather.shared_preferences
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.weather.Constants
-import com.example.weather.Constants.Companion.START_DIALOG_KEY
 
 class SettingsSharedPreferences private constructor(var context: Context) :
     SettingsSharedPreferencesSource {
@@ -18,6 +18,7 @@ class SettingsSharedPreferences private constructor(var context: Context) :
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var instance: SettingsSharedPreferences? = null
 
@@ -48,12 +49,29 @@ class SettingsSharedPreferences private constructor(var context: Context) :
         sharedPreferences.getFloat(Constants.LATITUDE, 0.0f)
 
     override fun getFirstTime() =
-        sharedPreferences.getBoolean(START_DIALOG_KEY, true)
+        sharedPreferences.getBoolean(Constants.START_DIALOG_KEY, true)
 
 
     override fun setFirstTime(first: Boolean) {
-        editor.putBoolean(START_DIALOG_KEY, first)
+        editor.putBoolean(Constants.START_DIALOG_KEY, first)
         editor.commit()
     }
+
+    override fun setLocationOption(way: String) {
+        editor.putString(Constants.LOCATION_OPTION, way)
+        editor.commit()
+    }
+
+    override fun getLocationOption() =
+        sharedPreferences.getString(Constants.LOCATION_OPTION, Constants.GPS) ?: Constants.GPS
+
+    override fun setNotificationOption(state: Boolean) {
+        editor.putBoolean(Constants.NOTIFICATION_OPTION, state)
+        editor.commit()
+    }
+
+    override fun getNotificationOption() =
+        sharedPreferences.getBoolean(Constants.NOTIFICATION_OPTION, false)
+
 
 }
