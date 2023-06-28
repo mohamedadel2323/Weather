@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel() {
-    private var _locationStateFlow = MutableStateFlow(Location())
-    val locationStateFlow: StateFlow<Location>
+    private var _locationStateFlow = MutableStateFlow<ApiState>(ApiState.Loading)
+    val locationStateFlow: StateFlow<ApiState>
         get() = _locationStateFlow
 
 
@@ -35,27 +35,10 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
 
 
     @SuppressLint("MissingPermission")
-    fun requestNewLocationData(fusedClient: FusedLocationProviderClient): StateFlow<Location> {
-        val locationRequest = LocationRequest().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-            interval = 0
+    fun requestNewLocationData(fusedClient: FusedLocationProviderClient): StateFlow<ApiState> {
+        fusedClient.lastLocation.addOnSuccessListener {
+            _locationStateFlow.value = ApiState.SuccessLocation(Location(it.longitude, it.latitude))
         }
-
-
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                Timber.e(locationResult?.lastLocation.toString())
-                locationResult?.let { it ->
-                    var longitude = it.lastLocation.longitude
-                    var latitude = it.lastLocation.latitude
-                    _locationStateFlow.value = Location(longitude, latitude)
-                    Timber.e("onLocationResult: ${it.lastLocation.longitude}")
-                }
-
-            }
-        }
-
-        fusedClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
         return locationStateFlow
     }
 

@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="weather"
+            type="com.example.weather.model.pojo.WeatherResponseEntity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,10 +16,10 @@
 
         <ProgressBar
             android:id="@+id/homeProgressBar"
-            android:elevation="8dp"
-            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:elevation="8dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -119,6 +122,7 @@
                 <TextView
                     android:id="@+id/todayDateTv"
                     style="@style/TextViewStyle"
+                    date="@{weather.current.dt}"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textAlignment="textEnd"
@@ -148,14 +152,26 @@
 
                 <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/todayStateAnimation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    state="@{weather.current.weather.get(0).icon}"
+                    android:layout_width="250dp"
+                    android:layout_height="125dp"
                     app:layout_constraintEnd_toEndOf="@id/endGuideline"
                     app:layout_constraintStart_toStartOf="@id/startGuideline"
                     app:layout_constraintTop_toBottomOf="@id/placeTv"
                     app:lottie_autoPlay="true"
-                    app:lottie_loop="true"
-                    app:lottie_rawRes="@raw/storm" />
+                    app:lottie_loop="true" />
+
+                <TextView
+                    android:id="@+id/currentTempTv"
+                    style="@style/TextViewStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{@string/singleDegreeFormat(weather.current.temp)}"
+                    android:textSize="28sp"
+                    app:layout_constraintEnd_toEndOf="@id/todayStateAnimation"
+                    app:layout_constraintStart_toStartOf="@id/todayStateAnimation"
+                    app:layout_constraintTop_toBottomOf="@id/todayStateAnimation"
+                    tools:text="25.00" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/dayStatusCv"
@@ -165,7 +181,7 @@
                     app:cardCornerRadius="15dp"
                     app:layout_constraintEnd_toEndOf="@id/endGuideline"
                     app:layout_constraintStart_toStartOf="@id/startGuideline"
-                    app:layout_constraintTop_toBottomOf="@id/todayStateAnimation"
+                    app:layout_constraintTop_toBottomOf="@id/currentTempTv"
                     app:strokeWidth="0dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -189,7 +205,7 @@
                             style="@style/TextViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1021 hpa"
+                            android:text="@{@string/pressureFormat(weather.current.pressure)}"
                             android:textSize="11sp"
                             app:layout_constraintEnd_toEndOf="@id/pressureIconIv"
                             app:layout_constraintStart_toStartOf="@id/pressureIconIv"
@@ -221,7 +237,7 @@
                             style="@style/TextViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="30 %"
+                            android:text="@{@string/humidityFormat(weather.current.humidity)}"
                             android:textSize="11sp"
                             app:layout_constraintEnd_toEndOf="@id/humidityIconIv"
                             app:layout_constraintStart_toStartOf="@id/humidityIconIv"
@@ -253,7 +269,7 @@
                             style="@style/TextViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2.06 m/s"
+                            android:text="@{@string/windFormat(weather.current.wind_speed)}"
                             android:textSize="11sp"
                             app:layout_constraintEnd_toEndOf="@id/windIconIv"
                             app:layout_constraintStart_toStartOf="@id/windIconIv"
@@ -286,7 +302,7 @@
                             style="@style/TextViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="13 %"
+                            android:text="@{@string/humidityFormat(weather.current.clouds)}"
                             android:textSize="11sp"
                             app:layout_constraintEnd_toEndOf="@id/cloudIconIv"
                             app:layout_constraintStart_toStartOf="@id/cloudIconIv"
@@ -319,7 +335,7 @@
                             style="@style/TextViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1021 hpa"
+                            android:text="@{String.valueOf(weather.current.uvi)}"
                             android:textSize="11sp"
                             app:layout_constraintEnd_toEndOf="@id/ultraVioletIconIv"
                             app:layout_constraintStart_toStartOf="@id/ultraVioletIconIv"
@@ -352,7 +368,7 @@
                             style="@style/TextViewStyle"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="1021 hpa"
+                            android:text="@{@string/visibilityFormat(weather.current.visibility)}"
                             android:textSize="11sp"
                             app:layout_constraintEnd_toEndOf="@id/visibilityIconIv"
                             app:layout_constraintStart_toStartOf="@id/visibilityIconIv"
@@ -410,8 +426,8 @@
                     android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/endGuideline"
-                    app:layout_constraintStart_toStartOf="@id/startGuideline"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/nextForecastTv"
                     tools:listitem="@layout/next_forecast_list_item" />
 

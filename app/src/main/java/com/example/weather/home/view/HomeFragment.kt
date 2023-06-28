@@ -3,7 +3,6 @@ package com.example.weather.home.view
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -19,14 +18,12 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.weather.Constants
-import com.example.weather.R
-import com.example.weather.checkPermissions
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.weather.*
 import com.example.weather.database.ConcreteLocalSource
 import com.example.weather.databinding.FragmentHomeBinding
 import com.example.weather.home.viewmodel.HomeFragmentViewModel
 import com.example.weather.home.viewmodel.HomeFragmentViewModelFactory
-import com.example.weather.isLocationEnabled
 import com.example.weather.model.Repository
 import com.example.weather.network.ApiClient
 import com.example.weather.network.ApiState
@@ -47,6 +44,8 @@ class HomeFragment : Fragment() {
     private lateinit var fusedClient: FusedLocationProviderClient
     lateinit var homeFragmentViewModel: HomeFragmentViewModel
     lateinit var homeFragmentViewModelFactory: HomeFragmentViewModelFactory
+    lateinit var dailyAdapter: DailyAdapter
+    lateinit var hourlyAdapter: HourlyAdapter
     private var locationOption = Constants.GPS
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -72,6 +71,10 @@ class HomeFragment : Fragment() {
             this,
             homeFragmentViewModelFactory
         ).get(HomeFragmentViewModel::class.java)
+
+        setHourlyRecycler()
+        setDailyRecycler()
+
         locationOption = homeFragmentViewModel.getLocationOption()
 
         if (locationOption == Constants.GPS) {
@@ -96,6 +99,9 @@ class HomeFragment : Fragment() {
                     homeFragmentViewModel.offlineWeatherStateFlow.collectLatest { apiState ->
                         when (apiState) {
                             is ApiState.SuccessOffline -> {
+                                fragmentHomeBinding.weather = apiState.data
+                                hourlyAdapter.submitList(apiState.data?.hourly)
+                                dailyAdapter.submitList(apiState.data?.daily)
                                 fragmentHomeBinding.placeTv.text =
                                     apiState.data?.timezone?.let {
                                         it.toString().split("/").last()
@@ -151,8 +157,16 @@ class HomeFragment : Fragment() {
                 lifecycleScope.launch {
                     homeFragmentViewModel.requestNewLocationData(fusedClient).collectLatest {
                         withContext(Dispatchers.IO) {
-                            Timber.e(it.toString())
-                            homeFragmentViewModel.getWeather(it)
+                            when(it){
+                                is ApiState.SuccessLocation -> it.location?.let { it1 ->
+                                    homeFragmentViewModel.getWeather(
+                                        it1
+                                    )
+                                }
+                                else -> {
+                                    fragmentHomeBinding.homeProgressBar.visibility = View.VISIBLE
+                                }
+                            }
                         }
                     }
                 }
@@ -192,13 +206,16 @@ class HomeFragment : Fragment() {
             homeFragmentViewModel.weatherResponseStateFlow.collectLatest {
                 when (it) {
                     is ApiState.Success -> {
+                        fragmentHomeBinding.weather = it.data?.toWeatherResponseEntity()
+                        hourlyAdapter.submitList(it.data?.hourly)
+                        dailyAdapter.submitList(it.data?.daily)
                         fragmentHomeBinding.placeTv.text =
                             it.data?.timezone.toString().split("/").last()
                         Timber.e(it.data?.timezone.toString())
                         fragmentHomeBinding.homeProgressBar.visibility = View.GONE
                     }
                     is ApiState.Failure -> {
-                        Timber.e(it.msg )
+                        Timber.e(it.msg)
                         fragmentHomeBinding.placeTv.text = "Unknown"
                         fragmentHomeBinding.homeProgressBar.visibility = View.GONE
                     }
@@ -219,5 +236,25 @@ class HomeFragment : Fragment() {
         return networkCapabilities != null && networkCapabilities.hasCapability(
             NetworkCapabilities.NET_CAPABILITY_INTERNET
         )
+    }
+
+    private fun setDailyRecycler() {
+        dailyAdapter = DailyAdapter()
+        val dailyLayoutManager = LinearLayoutManager(requireContext())
+        dailyLayoutManager.orientation = LinearLayoutManager.VERTICAL
+        fragmentHomeBinding.nextForecastRv.apply {
+            adapter = dailyAdapter
+            layoutManager = dailyLayoutManager
+        }
+    }
+
+    private fun setHourlyRecycler() {
+        hourlyAdapter = HourlyAdapter()
+        val hourlyLayoutManager = LinearLayoutManager(requireContext())
+        hourlyLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+        fragmentHomeBinding.hourlyDegreeRv.apply {
+            adapter = hourlyAdapter
+            layoutManager = hourlyLayoutManager
+        }
     }
 }

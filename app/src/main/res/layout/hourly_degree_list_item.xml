@@ -1,60 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/hourStateCard"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    app:cardCornerRadius="20dp"
-    app:cardUseCompatPadding="true">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/rv_item"
-        android:paddingStart="16dp"
-        android:paddingTop="4dp"
-        android:paddingEnd="16dp"
-        android:paddingBottom="4dp">
+    <data>
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/hourlyWeatherStateLA"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            android:layout_marginEnd="4dp"
+        <variable
+            name="hourly"
+            type="com.example.weather.model.pojo.Hourly" />
+    </data>
 
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/timeTv"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/hourStateCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:cardCornerRadius="20dp"
+        app:cardUseCompatPadding="true">
 
-        <TextView
-            android:id="@+id/hourlyDegreeTv"
-            style="@style/TextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:textStyle="normal"
-            app:layout_constraintBottom_toBottomOf="@id/hourlyWeatherStateLA"
-            app:layout_constraintEnd_toEndOf="@id/timeTv"
-            app:layout_constraintStart_toStartOf="@id/timeTv"
-            app:layout_constraintTop_toBottomOf="@id/timeTv"
-            tools:text="32 °c" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/rv_item"
+            android:paddingStart="16dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="4dp">
 
-        <TextView
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/hourlyWeatherStateLA"
+                state="@{hourly.weather.get(0).icon}"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_marginEnd="4dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/timeTv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true" />
 
-            android:id="@+id/timeTv"
-            style="@style/TextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@id/hourlyDegreeTv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/hourlyWeatherStateLA"
-            app:layout_constraintTop_toTopOf="@id/hourlyWeatherStateLA"
-            tools:text="14.00" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</com.google.android.material.card.MaterialCardView>
+            <TextView
+                android:id="@+id/hourlyDegreeTv"
+                style="@style/TextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{@string/singleDegreeFormat(hourly.temp)}"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                app:layout_constraintBottom_toBottomOf="@id/hourlyWeatherStateLA"
+                app:layout_constraintEnd_toEndOf="@id/timeTv"
+                app:layout_constraintStart_toStartOf="@id/timeTv"
+                app:layout_constraintTop_toBottomOf="@id/timeTv"
+                tools:text="32 °c" />
+
+            <TextView
+                android:id="@+id/timeTv"
+                style="@style/TextViewStyle"
+                hour="@{hourly.dt}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@id/hourlyDegreeTv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/hourlyWeatherStateLA"
+                app:layout_constraintTop_toTopOf="@id/hourlyWeatherStateLA"
+                tools:text="14.00" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>
