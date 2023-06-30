@@ -12,4 +12,6 @@ interface SettingsSharedPreferencesSource {
     fun setNotificationOption(state: Boolean)
     fun getNotificationOption(): Boolean
 
+    fun getMapFirstTime(): Boolean
+    fun setMapFirstTime(first: Boolean)
 }

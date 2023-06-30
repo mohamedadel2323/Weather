@@ -57,6 +57,15 @@ class SettingsSharedPreferences private constructor(var context: Context) :
         editor.commit()
     }
 
+    override fun getMapFirstTime() =
+        sharedPreferences.getBoolean(Constants.START_MAP, true)
+
+
+    override fun setMapFirstTime(first: Boolean) {
+        editor.putBoolean(Constants.START_MAP, first)
+        editor.commit()
+    }
+
     override fun setLocationOption(way: String) {
         editor.putString(Constants.LOCATION_OPTION, way)
         editor.commit()

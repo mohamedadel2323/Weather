@@ -36,9 +36,9 @@ fun selectWeatherState(view: LottieAnimationView, iconId: String?) {
         "01d" -> {view.setAnimation(R.raw.sunny)}
         "01n" -> {view.setAnimation(R.raw.clear_night)}
         "02d" -> {view.setAnimation(R.raw.partly_cloudy)}
-        "02n" -> {view.setAnimation(R.raw.partly_cloudy_night)}
+        "02n" -> {view.setAnimation(R.raw.broken_clouds)}
         "03d" , "03n" -> {view.setAnimation(R.raw.scatteredclouds)}
-        "04d" , "04n" -> {view.setAnimation(R.raw.broken)}
+        "04d" , "04n" -> {view.setAnimation(R.raw.broken_clouds)}
         "09d" , "09n" -> {view.setAnimation(R.raw.rain)}
         "10d" , "10n" -> {view.setAnimation(R.raw.rain)}
         "11d" , "11n" -> {view.setAnimation(R.raw.storm)}

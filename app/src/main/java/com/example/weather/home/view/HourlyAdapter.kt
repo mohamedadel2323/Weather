@@ -11,24 +11,29 @@ import com.example.weather.databinding.HourlyDegreeListItemBinding
 import com.example.weather.model.pojo.Hourly
 
 class HourlyAdapter : ListAdapter<Hourly, HourlyViewHolder>(HourlyDiffUtil()) {
-    lateinit var hourlyDegreeListItemBinding: HourlyDegreeListItemBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyViewHolder {
-        hourlyDegreeListItemBinding = DataBindingUtil.inflate(
+        val binding = DataBindingUtil.inflate<HourlyDegreeListItemBinding>(
             LayoutInflater.from(parent.context),
             R.layout.hourly_degree_list_item,
             parent,
             false
         )
-        return HourlyViewHolder(hourlyDegreeListItemBinding)
+        return HourlyViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: HourlyViewHolder, position: Int) {
-        hourlyDegreeListItemBinding.hourly = getItem(position)
+        holder.bind(getItem(position))
     }
 }
 
 class HourlyViewHolder(private val binding: HourlyDegreeListItemBinding) :
-    RecyclerView.ViewHolder(binding.root)
+    RecyclerView.ViewHolder(binding.root) {
+
+    fun bind(hourly: Hourly) {
+        binding.hourly = hourly
+        binding.executePendingBindings()
+    }
+}
 
 class HourlyDiffUtil : DiffUtil.ItemCallback<Hourly>() {
     override fun areItemsTheSame(oldItem: Hourly, newItem: Hourly): Boolean {

@@ -18,6 +18,9 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.*
 import com.example.weather.database.ConcreteLocalSource
@@ -25,12 +28,14 @@ import com.example.weather.databinding.FragmentHomeBinding
 import com.example.weather.home.viewmodel.HomeFragmentViewModel
 import com.example.weather.home.viewmodel.HomeFragmentViewModelFactory
 import com.example.weather.model.Repository
+import com.example.weather.model.pojo.Location
 import com.example.weather.network.ApiClient
 import com.example.weather.network.ApiState
 import com.example.weather.shared_preferences.SettingsSharedPreferences
 import com.example.weather.view.My_LOCATION_PERMISSION_ID
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -94,32 +99,33 @@ class HomeFragment : Fragment() {
                     fragmentHomeBinding.homeScrollView.visibility = View.GONE
                 }
             } else {
-                homeFragmentViewModel.getWeatherFromDatabase()
-                lifecycleScope.launch {
-                    homeFragmentViewModel.offlineWeatherStateFlow.collectLatest { apiState ->
-                        when (apiState) {
-                            is ApiState.SuccessOffline -> {
-                                fragmentHomeBinding.weather = apiState.data
-                                hourlyAdapter.submitList(apiState.data?.hourly)
-                                dailyAdapter.submitList(apiState.data?.daily)
-                                fragmentHomeBinding.placeTv.text =
-                                    apiState.data?.timezone?.let {
-                                        it.toString().split("/").last()
-                                    } ?: "Unknown"
-                                fragmentHomeBinding.homeProgressBar.visibility = View.GONE
-
-                            }
-                            else -> {
-                                fragmentHomeBinding.homeProgressBar.visibility = View.VISIBLE
-                            }
-                        }
-                    }
-                }
-
+                Snackbar.make(
+                    requireView(),
+                    "No Connection",
+                    Snackbar.LENGTH_SHORT
+                ).show()
+                getWeatherFromDatabase()
             }
         } else if (locationOption == Constants.MAP) {
-            Toast.makeText(requireContext(), "Map", Toast.LENGTH_SHORT).show()
 
+
+            if (checkConnection(requireContext())) {
+                if (homeFragmentViewModel.getMapFirstTime()) {
+                    homeFragmentViewModel.setMapFirstTime()
+                    Navigation.findNavController(fragmentHomeBinding.root)
+                        .navigate(HomeFragmentDirections.actionHomeFragmentToMapsFragment())
+                }
+                homeFragmentViewModel.getWeather(
+                    Location(
+                        homeFragmentViewModel.getLongitude(),
+                        homeFragmentViewModel.getLatitude()
+                    )
+                )
+                getWeather()
+            } else {
+                Toast.makeText(requireContext(), "No Connection", Toast.LENGTH_SHORT).show()
+                getWeatherFromDatabase()
+            }
         }
     }
 
@@ -133,23 +139,10 @@ class HomeFragment : Fragment() {
                     fragmentHomeBinding.homeScrollView.visibility = View.VISIBLE
                     getLocationAndWeather()
                 }
-            } else if (locationOption == Constants.MAP) {
-                Toast.makeText(requireContext(), "Map", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<out String>,
-//        grantResults: IntArray
-//    ) {
-//        if (requestCode == My_LOCATION_PERMISSION_ID) {
-//            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                getLastLocation()
-//            }
-//        }
-//    }
 
     private fun getLastLocation() {
         if (checkPermissions(requireContext())) {
@@ -157,7 +150,7 @@ class HomeFragment : Fragment() {
                 lifecycleScope.launch {
                     homeFragmentViewModel.requestNewLocationData(fusedClient).collectLatest {
                         withContext(Dispatchers.IO) {
-                            when(it){
+                            when (it) {
                                 is ApiState.SuccessLocation -> it.location?.let { it1 ->
                                     homeFragmentViewModel.getWeather(
                                         it1
@@ -172,7 +165,7 @@ class HomeFragment : Fragment() {
                 }
             } else {
                 Snackbar.make(
-                    fragmentHomeBinding.root,
+                    requireView(),
                     "Turn on location please",
                     Toast.LENGTH_SHORT
                 ).apply {
@@ -201,7 +194,11 @@ class HomeFragment : Fragment() {
 
     private fun getLocationAndWeather() {
         getLastLocation()
+        getWeather()
 
+    }
+
+    private fun getWeather() {
         lifecycleScope.launch {
             homeFragmentViewModel.weatherResponseStateFlow.collectLatest {
                 when (it) {
@@ -210,7 +207,7 @@ class HomeFragment : Fragment() {
                         hourlyAdapter.submitList(it.data?.hourly)
                         dailyAdapter.submitList(it.data?.daily)
                         fragmentHomeBinding.placeTv.text =
-                            it.data?.timezone.toString().split("/").last()
+                            it.data?.timezone
                         Timber.e(it.data?.timezone.toString())
                         fragmentHomeBinding.homeProgressBar.visibility = View.GONE
                     }
@@ -218,6 +215,28 @@ class HomeFragment : Fragment() {
                         Timber.e(it.msg)
                         fragmentHomeBinding.placeTv.text = "Unknown"
                         fragmentHomeBinding.homeProgressBar.visibility = View.GONE
+                    }
+                    else -> {
+                        fragmentHomeBinding.homeProgressBar.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getWeatherFromDatabase() {
+        homeFragmentViewModel.getWeatherFromDatabase()
+        lifecycleScope.launch {
+            homeFragmentViewModel.offlineWeatherStateFlow.collectLatest { apiState ->
+                when (apiState) {
+                    is ApiState.SuccessOffline -> {
+                        fragmentHomeBinding.weather = apiState.data
+                        hourlyAdapter.submitList(apiState.data?.hourly)
+                        dailyAdapter.submitList(apiState.data?.daily)
+                        fragmentHomeBinding.placeTv.text =
+                            apiState.data?.timezone?: "Unknown"
+                        fragmentHomeBinding.homeProgressBar.visibility = View.GONE
+
                     }
                     else -> {
                         fragmentHomeBinding.homeProgressBar.visibility = View.VISIBLE

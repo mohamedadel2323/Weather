@@ -2,6 +2,15 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+}
+
+
+def getApiKey() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('secrets.properties').newDataInputStream())
+    return properties.getProperty("API_KEY")
 }
 
 android {
@@ -14,6 +23,8 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
+
+        manifestPlaceholders = [googleMapsApiKey: getApiKey()]
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,6 +60,7 @@ dependencies {
     //Room
     implementation 'androidx.room:room-ktx:2.5.0'
     implementation 'androidx.room:room-runtime:2.5.0'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
     kapt 'androidx.room:room-compiler:2.5.0'
     //ViewModel & livedata
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'

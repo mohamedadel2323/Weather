@@ -19,4 +19,6 @@ interface RepoInterface {
     suspend fun getWeather(location : Location) : Flow<Response<WeatherResponse>>
     suspend fun insertWeatherToDatabase(weatherResponse: WeatherResponseEntity)
     suspend fun getWeatherFromDatabase() : Flow<WeatherResponseEntity>
+    fun getMapFirstTime(): Boolean
+    fun setMapFirstTime(first: Boolean)
 }

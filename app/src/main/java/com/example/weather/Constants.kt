@@ -10,4 +10,5 @@ object Constants {
     const val MAP = "map"
     const val LOCATION_OPTION = "locationOption"
     const val NOTIFICATION_OPTION = "notificationOption"
+    const val START_MAP = "startMap"
 }

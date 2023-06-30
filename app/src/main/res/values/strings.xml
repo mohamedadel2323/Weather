@@ -48,4 +48,5 @@
     <string name="humidityFormat">%d %%</string>
     <string name="windFormat">%1.2f m/s</string>
     <string name="visibilityFormat">%d m</string>
+    <string name="set_location">Set Location</string>
 </resources>

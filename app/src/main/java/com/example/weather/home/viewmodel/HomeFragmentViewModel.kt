@@ -1,7 +1,6 @@
 package com.example.weather.home.viewmodel
 
 import android.annotation.SuppressLint
-import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weather.model.RepoInterface
@@ -9,15 +8,12 @@ import com.example.weather.model.pojo.Location
 import com.example.weather.network.ApiState
 import com.example.weather.toWeatherResponseEntity
 import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import java.net.SocketTimeoutException
 
 class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel() {
     private var _locationStateFlow = MutableStateFlow<ApiState>(ApiState.Loading)
@@ -44,16 +40,20 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
 
     fun getWeather(location: Location) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getWeather(location).catch {
-                _weatherResponseStateFlow.emit(ApiState.Failure(it.localizedMessage))
-            }.collect {
-                if (it.isSuccessful) {
-                    _weatherResponseStateFlow.emit(ApiState.Success(it.body()))
-                    it.body()
-                        ?.let { it1 -> repository.insertWeatherToDatabase(it1.toWeatherResponseEntity()) }
-                } else {
-                    _weatherResponseStateFlow.emit(ApiState.Failure(it.code().toString()))
+            try {
+                repository.getWeather(location).catch {
+                    _weatherResponseStateFlow.emit(ApiState.Failure(it.localizedMessage))
+                }.collect {
+                    if (it.isSuccessful) {
+                        _weatherResponseStateFlow.emit(ApiState.Success(it.body()))
+                        it.body()
+                            ?.let { it1 -> repository.insertWeatherToDatabase(it1.toWeatherResponseEntity()) }
+                    } else {
+                        _weatherResponseStateFlow.emit(ApiState.Failure(it.code().toString()))
+                    }
                 }
+            } catch (e: SocketTimeoutException) {
+                _weatherResponseStateFlow.emit(ApiState.Failure(e.localizedMessage))
             }
         }
     }
@@ -67,4 +67,14 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
     }
 
     fun getLocationOption() = repository.getLocationOption()
+
+    fun getMapFirstTime() = repository.getMapFirstTime()
+
+    fun setMapFirstTime() {
+        repository.setMapFirstTime(false)
+    }
+
+    fun getLatitude() = repository.getLatitude()
+
+    fun getLongitude() = repository.getLongitude()
 }

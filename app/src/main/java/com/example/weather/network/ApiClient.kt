@@ -12,7 +12,7 @@ const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
 
 object ApiClient : RemoteSource {
     override suspend fun getWeather(location: Location) : Response<WeatherResponse> {
-        return Api.apiService.getWeather(location.latitude , location.latitude)
+        return Api.apiService.getWeather(location.latitude , location.longitude)
     }
 }
 

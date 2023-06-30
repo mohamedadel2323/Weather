@@ -37,6 +37,12 @@ class Repository(
         sharedPreferencesSource.setFirstTime(first)
     }
 
+    override fun getMapFirstTime() = sharedPreferencesSource.getMapFirstTime()
+
+    override fun setMapFirstTime(first: Boolean) {
+        sharedPreferencesSource.setMapFirstTime(first)
+    }
+
     override fun getLatitude(): Double = sharedPreferencesSource.getLat().toDouble()
 
     override fun setLatitude(latitude: Double) {
@@ -54,6 +60,7 @@ class Repository(
     override fun setLocationOption(option: String) {
         sharedPreferencesSource.setLocationOption(option)
     }
+
     override fun setNotificationOption(option: Boolean) {
         sharedPreferencesSource.setNotificationOption(option)
     }

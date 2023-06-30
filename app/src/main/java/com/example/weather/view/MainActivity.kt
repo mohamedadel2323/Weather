@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
@@ -52,6 +53,10 @@ class MainActivity : AppCompatActivity() {
             activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
             navController = Navigation.findNavController(this, R.id.nav_host)
             NavigationUI.setupWithNavController(activityMainBinding.bottomNavigation, navController)
+            if (navController.currentDestination == navController.findDestination(R.id.mapsFragment)
+            ) {
+                activityMainBinding.bottomNavigation.visibility = View.GONE
+            }
         }
     }
 
@@ -108,6 +113,10 @@ class MainActivity : AppCompatActivity() {
                     activityMainBinding.bottomNavigation,
                     navController
                 )
+                if (navController.currentDestination == navController.findDestination(R.id.mapsFragment)
+                ) {
+                    activityMainBinding.bottomNavigation.visibility = View.GONE
+                }
                 mainActivityViewModel.setFirstTime()
                 dismiss()
             }
