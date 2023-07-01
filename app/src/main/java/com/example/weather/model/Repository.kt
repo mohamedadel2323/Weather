@@ -1,5 +1,6 @@
 package com.example.weather.model
 
+import com.example.weather.Constants
 import com.example.weather.database.LocalSource
 import com.example.weather.model.pojo.Location
 import com.example.weather.model.pojo.WeatherResponse
@@ -65,8 +66,28 @@ class Repository(
         sharedPreferencesSource.setNotificationOption(option)
     }
 
-    override suspend fun getWeather(location: Location): Flow<Response<WeatherResponse>> {
-        return flowOf(remoteSource.getWeather(location))
+    override fun getNotificationOption() = sharedPreferencesSource.getNotificationOption()
+
+    override fun setLanguageOption(language: String) {
+        sharedPreferencesSource.setLanguageOption(language)
+    }
+
+    override fun getUnitOption() = sharedPreferencesSource.getUnitOption()
+
+    override fun setUnitOption(option: String) {
+        sharedPreferencesSource.setUnitOption(option)
+    }
+
+    override fun getTemperatureOption() = sharedPreferencesSource.getTemperatureOption()
+
+    override fun setTemperatureOption(temp: String) {
+        sharedPreferencesSource.setTemperatureOption(temp)
+    }
+
+    override fun getLanguageOption() = sharedPreferencesSource.getLanguageOption()
+
+    override suspend fun getWeather(location: Location , unit : String , language : String): Flow<Response<WeatherResponse>> {
+        return flowOf(remoteSource.getWeather(location , unit , language))
     }
 
     override suspend fun insertWeatherToDatabase(weatherResponse: WeatherResponseEntity) {

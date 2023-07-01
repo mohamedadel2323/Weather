@@ -38,10 +38,10 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
         return locationStateFlow
     }
 
-    fun getWeather(location: Location) {
+    fun getWeather(location: Location , unit : String , language : String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                repository.getWeather(location).catch {
+                repository.getWeather(location , unit , language).catch {
                     _weatherResponseStateFlow.emit(ApiState.Failure(it.localizedMessage))
                 }.collect {
                     if (it.isSuccessful) {
@@ -77,4 +77,9 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
     fun getLatitude() = repository.getLatitude()
 
     fun getLongitude() = repository.getLongitude()
+
+    fun getLanguageOption() = repository.getLanguageOption()
+
+    fun getTemperatureOption() = repository.getTemperatureOption()
+
 }

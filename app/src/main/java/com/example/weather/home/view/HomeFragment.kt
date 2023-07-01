@@ -119,7 +119,9 @@ class HomeFragment : Fragment() {
                     Location(
                         homeFragmentViewModel.getLongitude(),
                         homeFragmentViewModel.getLatitude()
-                    )
+                    ),
+                    homeFragmentViewModel.getTemperatureOption()!!,
+                    homeFragmentViewModel.getLanguageOption()!!
                 )
                 getWeather()
             } else {
@@ -153,11 +155,16 @@ class HomeFragment : Fragment() {
                             when (it) {
                                 is ApiState.SuccessLocation -> it.location?.let { it1 ->
                                     homeFragmentViewModel.getWeather(
-                                        it1
+                                        it1,
+                                        homeFragmentViewModel.getTemperatureOption()!!,
+                                        homeFragmentViewModel.getLanguageOption()!!
                                     )
                                 }
                                 else -> {
-                                    fragmentHomeBinding.homeProgressBar.visibility = View.VISIBLE
+                                    withContext(Dispatchers.Main) {
+                                        fragmentHomeBinding.homeProgressBar.visibility =
+                                            View.VISIBLE
+                                    }
                                 }
                             }
                         }
@@ -234,7 +241,7 @@ class HomeFragment : Fragment() {
                         hourlyAdapter.submitList(apiState.data?.hourly)
                         dailyAdapter.submitList(apiState.data?.daily)
                         fragmentHomeBinding.placeTv.text =
-                            apiState.data?.timezone?: "Unknown"
+                            apiState.data?.timezone ?: "Unknown"
                         fragmentHomeBinding.homeProgressBar.visibility = View.GONE
 
                     }

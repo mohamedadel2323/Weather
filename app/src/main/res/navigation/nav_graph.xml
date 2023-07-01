@@ -23,7 +23,11 @@
         android:id="@+id/settingsFragment"
         android:name="com.example.weather.settings.view.SettingsFragment"
         android:label="SettingsFragment"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_settingsFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/alarmFragment"
         android:name="com.example.weather.alerts.view.AlertFragment"

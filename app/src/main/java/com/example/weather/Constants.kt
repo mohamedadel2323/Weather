@@ -11,4 +11,15 @@ object Constants {
     const val LOCATION_OPTION = "locationOption"
     const val NOTIFICATION_OPTION = "notificationOption"
     const val START_MAP = "startMap"
+    const val ARABIC = "ar"
+    const val ENGLISH = "en"
+    const val LANGUAGE = "language"
+    const val UNIT = "unit"
+    const val TEMPERATURE = "temperature"
+    //Temperature in Celsius and wind speed in meter/sec
+    const val METRIC = "metric"
+    //Temperature in Fahrenheit and wind speed in miles/hour
+    const val IMPERIAL = "imperial"
+    //Temperature in Kelvin and wind speed in meter/sec
+    const val STANDARD = "null"
 }

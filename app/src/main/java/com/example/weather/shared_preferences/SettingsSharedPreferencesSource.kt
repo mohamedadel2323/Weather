@@ -14,4 +14,10 @@ interface SettingsSharedPreferencesSource {
 
     fun getMapFirstTime(): Boolean
     fun setMapFirstTime(first: Boolean)
+    fun getLanguageOption(): String?
+    fun setLanguageOption(state: String)
+    fun setUnitOption(option: String)
+    fun getUnitOption(): String?
+    fun setTemperatureOption(temp: String)
+    fun getTemperatureOption(): String?
 }

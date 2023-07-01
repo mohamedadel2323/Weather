@@ -79,8 +79,32 @@ class SettingsSharedPreferences private constructor(var context: Context) :
         editor.commit()
     }
 
+    override fun getLanguageOption() =
+        sharedPreferences.getString(Constants.LANGUAGE, Constants.ENGLISH)
+
+    override fun setLanguageOption(state: String) {
+        editor.putString(Constants.LANGUAGE, state)
+        editor.commit()
+    }
+
     override fun getNotificationOption() =
         sharedPreferences.getBoolean(Constants.NOTIFICATION_OPTION, false)
+
+    override fun setUnitOption(option: String) {
+        editor.putString(Constants.UNIT, option)
+        editor.commit()
+    }
+
+    override fun getUnitOption() =
+        sharedPreferences.getString(Constants.UNIT, Constants.METRIC)
+
+    override fun setTemperatureOption(temp: String) {
+        editor.putString(Constants.TEMPERATURE, temp)
+        editor.commit()
+    }
+
+    override fun getTemperatureOption() =
+        sharedPreferences.getString(Constants.TEMPERATURE, Constants.METRIC)
 
 
 }

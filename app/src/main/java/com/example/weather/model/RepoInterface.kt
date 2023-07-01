@@ -16,9 +16,16 @@ interface RepoInterface {
     fun getLocationOption() : String
     fun setLocationOption(option : String)
     fun setNotificationOption(option: Boolean)
-    suspend fun getWeather(location : Location) : Flow<Response<WeatherResponse>>
+    suspend fun getWeather(location : Location, unit : String , language : String) : Flow<Response<WeatherResponse>>
     suspend fun insertWeatherToDatabase(weatherResponse: WeatherResponseEntity)
     suspend fun getWeatherFromDatabase() : Flow<WeatherResponseEntity>
     fun getMapFirstTime(): Boolean
     fun setMapFirstTime(first: Boolean)
+    fun getNotificationOption(): Boolean
+    fun setLanguageOption(language: String)
+    fun getLanguageOption(): String?
+    fun getUnitOption(): String?
+    fun setUnitOption(option: String)
+    fun getTemperatureOption(): String?
+    fun setTemperatureOption(temp: String)
 }
