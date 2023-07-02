@@ -2,6 +2,7 @@ package com.example.weather.model
 
 import com.example.weather.Constants
 import com.example.weather.database.LocalSource
+import com.example.weather.model.pojo.FavoritePlace
 import com.example.weather.model.pojo.Location
 import com.example.weather.model.pojo.WeatherResponse
 import com.example.weather.model.pojo.WeatherResponseEntity
@@ -84,17 +85,37 @@ class Repository(
         sharedPreferencesSource.setTemperatureOption(temp)
     }
 
+    override fun getMapFavorite() = sharedPreferencesSource.getMapFavorite()
+
+    override fun setMapFavorite(isFavorite: Boolean) {
+        sharedPreferencesSource.setMapFavorite(isFavorite)
+    }
+
     override fun getLanguageOption() = sharedPreferencesSource.getLanguageOption()
 
-    override suspend fun getWeather(location: Location , unit : String , language : String): Flow<Response<WeatherResponse>> {
-        return flowOf(remoteSource.getWeather(location , unit , language))
-    }
+    override suspend fun getWeather(
+        location: Location,
+        unit: String,
+        language: String
+    ): Flow<Response<WeatherResponse>> =
+        flowOf(remoteSource.getWeather(location, unit, language))
+
 
     override suspend fun insertWeatherToDatabase(weatherResponse: WeatherResponseEntity) {
         localSource.insertWeather(weatherResponse)
     }
 
-    override suspend fun getWeatherFromDatabase(): Flow<WeatherResponseEntity> {
-        return localSource.getCurrentWeather()
+    override suspend fun getWeatherFromDatabase(): Flow<WeatherResponseEntity> =
+        localSource.getCurrentWeather()
+
+    override suspend fun insertFavorite(favoritePlace: FavoritePlace) {
+        localSource.insertFavorite(favoritePlace)
+    }
+
+    override fun getAllFavorites(): Flow<List<FavoritePlace>> =
+        localSource.getAllFavorites()
+
+    override fun deleteFavorite(favoritePlace: FavoritePlace) {
+        localSource.deleteFavorite(favoritePlace)
     }
 }

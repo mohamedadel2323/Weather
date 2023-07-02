@@ -106,5 +106,13 @@ class SettingsSharedPreferences private constructor(var context: Context) :
     override fun getTemperatureOption() =
         sharedPreferences.getString(Constants.TEMPERATURE, Constants.METRIC)
 
+    override fun setMapFavorite(isFavorite: Boolean) {
+        editor.putBoolean(Constants.MAP_FAVORITE, isFavorite)
+        editor.commit()
+    }
+
+    override fun getMapFavorite() =
+        sharedPreferences.getBoolean(Constants.MAP_FAVORITE, false)
+
 
 }

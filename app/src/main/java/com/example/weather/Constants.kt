@@ -11,6 +11,7 @@ object Constants {
     const val LOCATION_OPTION = "locationOption"
     const val NOTIFICATION_OPTION = "notificationOption"
     const val START_MAP = "startMap"
+    const val MAP_FAVORITE = "mapFavorite"
     const val ARABIC = "ar"
     const val ENGLISH = "en"
     const val LANGUAGE = "language"

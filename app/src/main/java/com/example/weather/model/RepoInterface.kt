@@ -1,5 +1,6 @@
 package com.example.weather.model
 
+import com.example.weather.model.pojo.FavoritePlace
 import com.example.weather.model.pojo.Location
 import com.example.weather.model.pojo.WeatherResponse
 import com.example.weather.model.pojo.WeatherResponseEntity
@@ -19,6 +20,9 @@ interface RepoInterface {
     suspend fun getWeather(location : Location, unit : String , language : String) : Flow<Response<WeatherResponse>>
     suspend fun insertWeatherToDatabase(weatherResponse: WeatherResponseEntity)
     suspend fun getWeatherFromDatabase() : Flow<WeatherResponseEntity>
+    suspend fun insertFavorite(favoritePlace: FavoritePlace)
+    fun getAllFavorites(): Flow<List<FavoritePlace>>
+    fun deleteFavorite(favoritePlace: FavoritePlace)
     fun getMapFirstTime(): Boolean
     fun setMapFirstTime(first: Boolean)
     fun getNotificationOption(): Boolean
@@ -28,4 +32,6 @@ interface RepoInterface {
     fun setUnitOption(option: String)
     fun getTemperatureOption(): String?
     fun setTemperatureOption(temp: String)
+    fun getMapFavorite(): Boolean
+    fun setMapFavorite(isFavorite: Boolean)
 }

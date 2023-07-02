@@ -20,4 +20,6 @@ interface SettingsSharedPreferencesSource {
     fun getUnitOption(): String?
     fun setTemperatureOption(temp: String)
     fun getTemperatureOption(): String?
+    fun setMapFavorite(isFavorite: Boolean)
+    fun getMapFavorite(): Boolean
 }

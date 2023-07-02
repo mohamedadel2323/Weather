@@ -18,6 +18,8 @@ import com.example.weather.databinding.FragmentMapsBinding
 import com.example.weather.map.viewmodel.MapsFragmentViewModelFactory
 import com.example.weather.map.viewmodel.MapsFragmentsViewModel
 import com.example.weather.model.Repository
+import com.example.weather.model.pojo.FavoritePlace
+import com.example.weather.model.pojo.Location
 import com.example.weather.network.ApiClient
 import com.example.weather.shared_preferences.SettingsSharedPreferences
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -82,6 +84,9 @@ class MapsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        mapsFragmentsViewModel.setMapFavorite(false)
+
         val bottomNavigationView =
             requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigation)
         if (bottomNavigationView != null) {
@@ -121,15 +126,42 @@ class MapsFragment : Fragment() {
 
         AlertDialog.Builder(requireContext()).create().apply {
             setView(customSaveDialogBinding.root)
-            customSaveDialogBinding.placeTv.text = geocoderArr?.get(0)?.countryName ?: "Unknown"
-            customSaveDialogBinding.detailsTv.text =
-                "${geocoderArr?.get(0)?.adminArea}-${geocoderArr?.get(0)?.subAdminArea}-${geocoderArr?.get(0)?.locality}"
-                    ?: "Unknown"
+            if (geocoderArr.isNullOrEmpty()) {
+                customSaveDialogBinding.placeTv.text = "Unknown pick valid one please"
+                customSaveDialogBinding.saveBtn.visibility = View.GONE
+            } else {
+                customSaveDialogBinding.placeTv.text = geocoderArr?.get(0)?.countryName ?: ""
+                customSaveDialogBinding.detailsTv.text =
+                    ("${geocoderArr?.get(0)?.adminArea ?: ""}-" +
+                            "${geocoderArr?.get(0)?.subAdminArea ?: ""}-" +
+                            (geocoderArr?.get(0)?.locality ?: ""))
+                        ?: "Unknown"
+            }
 
             customSaveDialogBinding.saveBtn.setOnClickListener {
-                Timber.e(locationLatLng.toString())
-                mapsFragmentsViewModel.setLatitude(locationLatLng!!.latitude)
-                mapsFragmentsViewModel.setLongitude(locationLatLng!!.longitude)
+                //if user opened map fragment from favorites fragment
+                if (mapsFragmentsViewModel.getMapFavorite()) {
+                    var placeName = geocoderArr?.get(0)?.locality ?: ""
+                    if (placeName.isEmpty()) {
+                        placeName = geocoderArr?.get(0)?.subAdminArea ?: ""
+                    }
+                    if (placeName.isEmpty()) {
+                        placeName = geocoderArr?.get(0)?.countryName ?: ""
+                    }
+
+                    mapsFragmentsViewModel.addFavoritePlace(
+                        FavoritePlace(
+                            placeName = placeName,
+                            latitude = locationLatLng!!.latitude,
+                            longitude = locationLatLng!!.longitude
+                        )
+                    )
+
+
+                } else {
+                    mapsFragmentsViewModel.setLatitude(locationLatLng!!.latitude)
+                    mapsFragmentsViewModel.setLongitude(locationLatLng!!.longitude)
+                }
                 dismiss()
                 findNavController().navigateUp()
             }

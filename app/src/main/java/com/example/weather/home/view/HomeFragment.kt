@@ -18,9 +18,7 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.*
 import com.example.weather.database.ConcreteLocalSource
@@ -35,7 +33,6 @@ import com.example.weather.shared_preferences.SettingsSharedPreferences
 import com.example.weather.view.My_LOCATION_PERMISSION_ID
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -45,17 +42,17 @@ import timber.log.Timber
 
 
 class HomeFragment : Fragment() {
-    lateinit var fragmentHomeBinding: FragmentHomeBinding
+    private lateinit var fragmentHomeBinding: FragmentHomeBinding
     private lateinit var fusedClient: FusedLocationProviderClient
-    lateinit var homeFragmentViewModel: HomeFragmentViewModel
-    lateinit var homeFragmentViewModelFactory: HomeFragmentViewModelFactory
-    lateinit var dailyAdapter: DailyAdapter
-    lateinit var hourlyAdapter: HourlyAdapter
+    private lateinit var homeFragmentViewModel: HomeFragmentViewModel
+    private lateinit var homeFragmentViewModelFactory: HomeFragmentViewModelFactory
+    private lateinit var dailyAdapter: DailyAdapter
+    private lateinit var hourlyAdapter: HourlyAdapter
     private var locationOption = Constants.GPS
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         fragmentHomeBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_home, container, false)
@@ -149,25 +146,28 @@ class HomeFragment : Fragment() {
     private fun getLastLocation() {
         if (checkPermissions(requireContext())) {
             if (isLocationEnabled(requireContext())) {
-                lifecycleScope.launch {
+                lifecycleScope.launch(Dispatchers.IO) {
                     homeFragmentViewModel.requestNewLocationData(fusedClient).collectLatest {
-                        withContext(Dispatchers.IO) {
-                            when (it) {
-                                is ApiState.SuccessLocation -> it.location?.let { it1 ->
-                                    homeFragmentViewModel.getWeather(
-                                        it1,
-                                        homeFragmentViewModel.getTemperatureOption()!!,
-                                        homeFragmentViewModel.getLanguageOption()!!
-                                    )
+                        when (it) {
+                            is ApiState.SuccessLocation -> it.location?.let { it1 ->
+                                homeFragmentViewModel.getWeather(
+                                    it1,
+                                    homeFragmentViewModel.getTemperatureOption()!!,
+                                    homeFragmentViewModel.getLanguageOption()!!
+                                )
+                                withContext(Dispatchers.Main) {
+                                    fragmentHomeBinding.homeProgressBar.visibility =
+                                        View.GONE
                                 }
-                                else -> {
-                                    withContext(Dispatchers.Main) {
-                                        fragmentHomeBinding.homeProgressBar.visibility =
-                                            View.VISIBLE
-                                    }
+                            }
+                            else -> {
+                                withContext(Dispatchers.Main) {
+                                    fragmentHomeBinding.homeProgressBar.visibility =
+                                        View.VISIBLE
                                 }
                             }
                         }
+
                     }
                 }
             } else {
@@ -220,7 +220,7 @@ class HomeFragment : Fragment() {
                     }
                     is ApiState.Failure -> {
                         Timber.e(it.msg)
-                        fragmentHomeBinding.placeTv.text = "Unknown"
+                        fragmentHomeBinding.placeTv.text = resources.getText(R.string.unknown)
                         fragmentHomeBinding.homeProgressBar.visibility = View.GONE
                     }
                     else -> {
