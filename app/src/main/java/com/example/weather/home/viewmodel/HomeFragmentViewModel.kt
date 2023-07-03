@@ -46,8 +46,10 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
                 }.collect {
                     if (it.isSuccessful) {
                         _weatherResponseStateFlow.emit(ApiState.Success(it.body()))
+
                         it.body()
                             ?.let { it1 -> repository.insertWeatherToDatabase(it1.toWeatherResponseEntity()) }
+
                     } else {
                         _weatherResponseStateFlow.emit(ApiState.Failure(it.code().toString()))
                     }

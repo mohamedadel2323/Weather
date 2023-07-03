@@ -28,7 +28,7 @@ class ConcreteLocalSource(private val context: Context) : LocalSource {
         return dao.getAllFavorites()
     }
 
-    override fun deleteFavorite(favoritePlace: FavoritePlace) {
+    override suspend fun deleteFavorite(favoritePlace: FavoritePlace) {
         dao.deleteFavorite(favoritePlace)
     }
 }

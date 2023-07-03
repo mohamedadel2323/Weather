@@ -25,29 +25,40 @@ android {
         versionName "1.0"
 
         manifestPlaceholders = [googleMapsApiKey: getApiKey()]
-
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        def apiKey = ""
+        try {
+            Properties props = new Properties()
+            props.load(new FileInputStream(project.rootProject.file("local.properties")))
+            apiKey = props.getProperty("MAPS_API_KEY")
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to load API key from local.properties file.", e)
         }
+        buildConfigField("String", "API_KEY", "\"$apiKey\"")
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+}
+
+buildTypes {
+    release {
+        minifyEnabled false
+        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    buildFeatures{
-        dataBinding = true
-    }
+}
+compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+}
+kotlinOptions {
+    jvmTarget = '1.8'
+}
+buildFeatures {
+    dataBinding = true
+}
 }
 
 dependencies {
+    //google places
+    implementation 'com.google.android.libraries.places:places:3.1.0'
     //locations
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     //Timber

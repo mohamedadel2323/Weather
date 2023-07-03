@@ -1,5 +1,6 @@
 package com.example.weather.map.view
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -8,9 +9,12 @@ import android.location.Geocoder
 import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.*
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.weather.BuildConfig
 import com.example.weather.R
 import com.example.weather.database.ConcreteLocalSource
 import com.example.weather.databinding.CustomSaveDialogBinding
@@ -28,6 +32,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import timber.log.Timber
 
@@ -37,20 +45,27 @@ class MapsFragment : Fragment() {
     lateinit var mapsFragmentViewModelFactory: MapsFragmentViewModelFactory
     private var locationLatLng: LatLng? = null
     private val callback = OnMapReadyCallback { googleMap ->
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-//        val sydney = LatLng(-34.0, 151.0)
-//        googleMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-//        googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
         setMapClick(googleMap)
     }
+
+    private val startAutocomplete =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val intent = result.data
+                if (intent != null) {
+                    val place = Autocomplete.getPlaceFromIntent(intent)
+                    Timber.e(
+                        "Place: ${place.name}, ${place.id}, ${place.latLng}"
+                    )
+                }
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                // The user canceled the operation.
+                Timber.e( "User canceled autocomplete")
+            }else{
+                Timber.e(result.resultCode.toString())
+            }
+        }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,6 +94,25 @@ class MapsFragment : Fragment() {
             this,
             mapsFragmentViewModelFactory
         ).get(MapsFragmentsViewModel::class.java)
+
+        // Initialize the SDK
+        if (!Places.isInitialized())
+            Places.initialize(requireContext(), BuildConfig.API_KEY)
+        Places.createClient(requireContext())
+
+        fragmentMapsBinding.searchIcon.setOnClickListener {
+            try {
+                val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+
+                // Start the autocomplete intent.
+                val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                    .build(requireContext())
+                startAutocomplete.launch(intent)
+            }catch (ex : Exception){
+                Timber.e(ex.localizedMessage)
+            }
+
+        }
     }
 
 

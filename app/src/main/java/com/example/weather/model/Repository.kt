@@ -115,7 +115,7 @@ class Repository(
     override fun getAllFavorites(): Flow<List<FavoritePlace>> =
         localSource.getAllFavorites()
 
-    override fun deleteFavorite(favoritePlace: FavoritePlace) {
+    override suspend fun deleteFavorite(favoritePlace: FavoritePlace) {
         localSource.deleteFavorite(favoritePlace)
     }
 }

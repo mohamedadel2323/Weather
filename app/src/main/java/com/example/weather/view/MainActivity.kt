@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
+import com.example.weather.BuildConfig
 import com.example.weather.Constants
 import com.example.weather.R
 import com.example.weather.database.ConcreteLocalSource
@@ -25,6 +26,7 @@ import com.example.weather.network.ApiClient
 import com.example.weather.shared_preferences.SettingsSharedPreferences
 import com.example.weather.viewmodel.MainActivityViewModel
 import com.example.weather.viewmodel.MainActivityViewModelFactory
+import com.google.android.libraries.places.api.Places
 
 const val My_LOCATION_PERMISSION_ID = 5005
 
@@ -70,7 +72,6 @@ class MainActivity : AppCompatActivity() {
             My_LOCATION_PERMISSION_ID
         )
     }
-
 
 
     private fun showDialog() {

@@ -26,6 +26,7 @@ import com.example.weather.databinding.FragmentHomeBinding
 import com.example.weather.home.viewmodel.HomeFragmentViewModel
 import com.example.weather.home.viewmodel.HomeFragmentViewModelFactory
 import com.example.weather.model.Repository
+import com.example.weather.model.pojo.FavoritePlace
 import com.example.weather.model.pojo.Location
 import com.example.weather.network.ApiClient
 import com.example.weather.network.ApiState
@@ -48,6 +49,7 @@ class HomeFragment : Fragment() {
     private lateinit var homeFragmentViewModelFactory: HomeFragmentViewModelFactory
     private lateinit var dailyAdapter: DailyAdapter
     private lateinit var hourlyAdapter: HourlyAdapter
+    private var favoritePlace: FavoritePlace? = null
     private var locationOption = Constants.GPS
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -76,6 +78,16 @@ class HomeFragment : Fragment() {
 
         setHourlyRecycler()
         setDailyRecycler()
+        try {
+            favoritePlace = HomeFragmentArgs.fromBundle(requireArguments()).favorite
+        } catch (ex: Exception) {
+            Timber.e(ex.localizedMessage)
+        }
+        if (favoritePlace != null) {
+            Timber.e(favoritePlace.toString())
+            fragmentHomeBinding.homeTitleTv.text = resources.getText(R.string.favorites)
+            arguments = null
+        }
 
         locationOption = homeFragmentViewModel.getLocationOption()
 
@@ -85,8 +97,16 @@ class HomeFragment : Fragment() {
                 if (checkPermissions(requireContext())) {
                     fragmentHomeBinding.permissionCv.visibility = View.GONE
                     fragmentHomeBinding.homeScrollView.visibility = View.VISIBLE
-
-                    getLocationAndWeather()
+                    if (favoritePlace != null) {
+                        homeFragmentViewModel.getWeather(
+                            Location(favoritePlace!!.longitude, favoritePlace!!.latitude),
+                            homeFragmentViewModel.getTemperatureOption()!!,
+                            homeFragmentViewModel.getLanguageOption()!!
+                        )
+                        getWeather()
+                    } else {
+                        getLocationAndWeather()
+                    }
 
                 } else {
                     fragmentHomeBinding.permissionBtn.setOnClickListener {
@@ -96,11 +116,7 @@ class HomeFragment : Fragment() {
                     fragmentHomeBinding.homeScrollView.visibility = View.GONE
                 }
             } else {
-                Snackbar.make(
-                    requireView(),
-                    "No Connection",
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                Toast.makeText(requireContext(), "No Connection", Toast.LENGTH_SHORT).show()
                 getWeatherFromDatabase()
             }
         } else if (locationOption == Constants.MAP) {
@@ -112,14 +128,22 @@ class HomeFragment : Fragment() {
                     Navigation.findNavController(fragmentHomeBinding.root)
                         .navigate(HomeFragmentDirections.actionHomeFragmentToMapsFragment())
                 }
-                homeFragmentViewModel.getWeather(
-                    Location(
-                        homeFragmentViewModel.getLongitude(),
-                        homeFragmentViewModel.getLatitude()
-                    ),
-                    homeFragmentViewModel.getTemperatureOption()!!,
-                    homeFragmentViewModel.getLanguageOption()!!
-                )
+                if (favoritePlace != null) {
+                    homeFragmentViewModel.getWeather(
+                        Location(favoritePlace!!.longitude, favoritePlace!!.latitude),
+                        homeFragmentViewModel.getTemperatureOption()!!,
+                        homeFragmentViewModel.getLanguageOption()!!
+                    )
+                } else {
+                    homeFragmentViewModel.getWeather(
+                        Location(
+                            homeFragmentViewModel.getLongitude(),
+                            homeFragmentViewModel.getLatitude()
+                        ),
+                        homeFragmentViewModel.getTemperatureOption()!!,
+                        homeFragmentViewModel.getLanguageOption()!!
+                    )
+                }
                 getWeather()
             } else {
                 Toast.makeText(requireContext(), "No Connection", Toast.LENGTH_SHORT).show()
@@ -131,6 +155,7 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
+        favoritePlace = null
         if (checkConnection(requireContext())) {
             if (locationOption == Constants.GPS) {
                 if (checkPermissions(requireContext())) {

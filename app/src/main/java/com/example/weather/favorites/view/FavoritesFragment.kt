@@ -90,7 +90,9 @@ class FavoritesFragment : Fragment(), OnFavoriteLongClick {
     }
 
     private fun showDetails(favoritePlace: FavoritePlace) {
-        Toast.makeText(requireContext(), "details", Toast.LENGTH_SHORT).show()
+        Navigation.findNavController(requireView()).navigate(
+            FavoritesFragmentDirections.actionFavoritesFragmentToHomeFragment(favoritePlace)
+        )
     }
 
     override fun onFavoriteLongClick(favoritePlace: FavoritePlace) {

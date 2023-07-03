@@ -21,5 +21,5 @@ interface WeatherDao {
     fun getAllFavorites(): Flow<List<FavoritePlace>>
 
     @Delete
-    fun deleteFavorite(favoritePlace: FavoritePlace)
+    suspend fun deleteFavorite(favoritePlace: FavoritePlace)
 }

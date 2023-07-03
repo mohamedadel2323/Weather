@@ -10,4 +10,4 @@ data class FavoritePlace(
     val placeName: String,
     val latitude: Double,
     val longitude: Double,
-)
+):java.io.Serializable

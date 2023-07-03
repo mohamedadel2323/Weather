@@ -13,6 +13,11 @@
         <action
             android:id="@+id/action_homeFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <argument
+            android:name="favorite"
+            app:argType="com.example.weather.model.pojo.FavoritePlace"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"
@@ -22,6 +27,9 @@
         <action
             android:id="@+id/action_favoritesFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

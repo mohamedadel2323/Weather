@@ -9,5 +9,5 @@ interface LocalSource {
     fun getCurrentWeather() : Flow<WeatherResponseEntity>
     suspend fun insertFavorite(favoritePlace: FavoritePlace)
     fun getAllFavorites(): Flow<List<FavoritePlace>>
-    fun deleteFavorite(favoritePlace: FavoritePlace)
+    suspend fun deleteFavorite(favoritePlace: FavoritePlace)
 }

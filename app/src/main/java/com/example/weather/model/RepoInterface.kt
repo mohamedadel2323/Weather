@@ -22,7 +22,7 @@ interface RepoInterface {
     suspend fun getWeatherFromDatabase() : Flow<WeatherResponseEntity>
     suspend fun insertFavorite(favoritePlace: FavoritePlace)
     fun getAllFavorites(): Flow<List<FavoritePlace>>
-    fun deleteFavorite(favoritePlace: FavoritePlace)
+    suspend fun deleteFavorite(favoritePlace: FavoritePlace)
     fun getMapFirstTime(): Boolean
     fun setMapFirstTime(first: Boolean)
     fun getNotificationOption(): Boolean
