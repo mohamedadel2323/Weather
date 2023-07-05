@@ -84,4 +84,9 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
 
     fun getTemperatureOption() = repository.getTemperatureOption()
 
+    fun setDetails(isDetails : Boolean){
+        repository.setDetails(isDetails)
+    }
+    fun getDetails() = repository.getDetails()
+
 }

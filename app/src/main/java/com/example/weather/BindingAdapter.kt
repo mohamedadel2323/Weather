@@ -24,6 +24,14 @@ fun convertTimeStampToDate(view: TextView, timeStamp: Int?) {
     view.text = dayOfWeek
 }
 
+@BindingAdapter("time")
+fun convertTimeStampToCompleteDate(view: TextView, timeStamp: Long?) {
+    val sdf = SimpleDateFormat("h:mm a\ndd MMM", Locale.getDefault())
+    val date = Date(timeStamp?: 0)
+    val dayOfWeek = sdf.format(date)
+    view.text = dayOfWeek
+}
+
 @BindingAdapter("hour")
 fun convertTimeStampToHour(view: TextView, timeStamp: Int?) {
     val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())

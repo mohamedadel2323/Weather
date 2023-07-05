@@ -32,4 +32,8 @@ class FavoritesFragmentViewModel(private val repository: RepoInterface) : ViewMo
             repository.deleteFavorite(favoritePlace)
         }
     }
+
+    fun setDetails(isDetails : Boolean){
+        repository.setDetails(isDetails)
+    }
 }

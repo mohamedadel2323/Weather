@@ -78,15 +78,17 @@ class HomeFragment : Fragment() {
 
         setHourlyRecycler()
         setDailyRecycler()
-        try {
+
+        if (homeFragmentViewModel.getDetails()) {
+            homeFragmentViewModel.setDetails(false)
             favoritePlace = HomeFragmentArgs.fromBundle(requireArguments()).favorite
-        } catch (ex: Exception) {
-            Timber.e(ex.localizedMessage)
+        }else{
+            favoritePlace = null
         }
+
         if (favoritePlace != null) {
             Timber.e(favoritePlace.toString())
             fragmentHomeBinding.homeTitleTv.text = resources.getText(R.string.favorites)
-            arguments = null
         }
 
         locationOption = homeFragmentViewModel.getLocationOption()
@@ -155,13 +157,46 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
-        favoritePlace = null
         if (checkConnection(requireContext())) {
             if (locationOption == Constants.GPS) {
                 if (checkPermissions(requireContext())) {
-                    fragmentHomeBinding.permissionCv.visibility = View.GONE
-                    fragmentHomeBinding.homeScrollView.visibility = View.VISIBLE
-                    getLocationAndWeather()
+                    if (isLocationEnabled(requireContext())) {
+                        fragmentHomeBinding.permissionCv.visibility = View.GONE
+                        fragmentHomeBinding.homeScrollView.visibility = View.VISIBLE
+                        if (favoritePlace != null) {
+                            homeFragmentViewModel.getWeather(
+                                Location(favoritePlace!!.longitude, favoritePlace!!.latitude),
+                                homeFragmentViewModel.getTemperatureOption()!!,
+                                homeFragmentViewModel.getLanguageOption()!!
+                            )
+                            getWeather()
+                        } else {
+                            getLocationAndWeather()
+                        }
+                    }
+
+                } else {
+                    if (favoritePlace != null) {
+                        homeFragmentViewModel.getWeather(
+                            Location(favoritePlace!!.longitude, favoritePlace!!.latitude),
+                            homeFragmentViewModel.getTemperatureOption()!!,
+                            homeFragmentViewModel.getLanguageOption()!!
+                        )
+                        getWeather()
+                    } else {
+                        Snackbar.make(
+                            requireView(),
+                            "Turn on location please",
+                            Snackbar.LENGTH_SHORT
+                        ).apply {
+                            setAction("Enable") {
+                                Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).apply {
+                                    startActivity(this)
+                                }
+                            }
+                            show()
+                        }
+                    }
                 }
             }
         }
@@ -172,6 +207,7 @@ class HomeFragment : Fragment() {
         if (checkPermissions(requireContext())) {
             if (isLocationEnabled(requireContext())) {
                 lifecycleScope.launch(Dispatchers.IO) {
+                    fusedClient = LocationServices.getFusedLocationProviderClient(requireContext())
                     homeFragmentViewModel.requestNewLocationData(fusedClient).collectLatest {
                         when (it) {
                             is ApiState.SuccessLocation -> it.location?.let { it1 ->
@@ -276,17 +312,6 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun checkConnection(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkCapabilities =
-            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-        return networkCapabilities != null && networkCapabilities.hasCapability(
-            NetworkCapabilities.NET_CAPABILITY_INTERNET
-        )
     }
 
     private fun setDailyRecycler() {

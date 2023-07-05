@@ -17,6 +17,9 @@ object Constants {
     const val LANGUAGE = "language"
     const val UNIT = "unit"
     const val TEMPERATURE = "temperature"
+    const val DETAILS = "details"
+    const val START_TIME = "startTime"
+    const val END_TIME = "endTime"
     //Temperature in Celsius and wind speed in meter/sec
     const val METRIC = "metric"
     //Temperature in Fahrenheit and wind speed in miles/hour

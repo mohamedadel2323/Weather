@@ -111,8 +111,15 @@ class SettingsSharedPreferences private constructor(var context: Context) :
         editor.commit()
     }
 
+    override fun getDetails() =
+        sharedPreferences.getBoolean(Constants.DETAILS, false)
+
+    override fun setDetails(isDetails: Boolean) {
+        editor.putBoolean(Constants.DETAILS, isDetails)
+        editor.commit()
+    }
+
     override fun getMapFavorite() =
         sharedPreferences.getBoolean(Constants.MAP_FAVORITE, false)
-
 
 }

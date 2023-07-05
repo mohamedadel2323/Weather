@@ -90,13 +90,14 @@ class FavoritesFragment : Fragment(), OnFavoriteLongClick {
     }
 
     private fun showDetails(favoritePlace: FavoritePlace) {
+        favoritesFragmentViewModel.setDetails(true)
         Navigation.findNavController(requireView()).navigate(
             FavoritesFragmentDirections.actionFavoritesFragmentToHomeFragment(favoritePlace)
         )
     }
 
     override fun onFavoriteLongClick(favoritePlace: FavoritePlace) {
-        val builder = AlertDialog.Builder(requireContext()).apply {
+        AlertDialog.Builder(requireContext()).apply {
             setMessage("Confirm Deletion")
             setPositiveButton(
                 "Delete"

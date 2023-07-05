@@ -2,10 +2,7 @@ package com.example.weather.model
 
 import com.example.weather.Constants
 import com.example.weather.database.LocalSource
-import com.example.weather.model.pojo.FavoritePlace
-import com.example.weather.model.pojo.Location
-import com.example.weather.model.pojo.WeatherResponse
-import com.example.weather.model.pojo.WeatherResponseEntity
+import com.example.weather.model.pojo.*
 import com.example.weather.network.RemoteSource
 import com.example.weather.shared_preferences.SettingsSharedPreferencesSource
 import kotlinx.coroutines.flow.Flow
@@ -91,6 +88,12 @@ class Repository(
         sharedPreferencesSource.setMapFavorite(isFavorite)
     }
 
+    override fun getDetails() = sharedPreferencesSource.getDetails()
+
+    override fun setDetails(isDetails: Boolean) {
+        sharedPreferencesSource.setDetails(isDetails)
+    }
+
     override fun getLanguageOption() = sharedPreferencesSource.getLanguageOption()
 
     override suspend fun getWeather(
@@ -117,5 +120,16 @@ class Repository(
 
     override suspend fun deleteFavorite(favoritePlace: FavoritePlace) {
         localSource.deleteFavorite(favoritePlace)
+    }
+
+    override suspend fun insertAlert(alert: AlertEntity) {
+        localSource.insertAlert(alert)
+    }
+
+    override fun getAllAlerts(): Flow<List<AlertEntity>> =
+        localSource.getAllAlerts()
+
+    override suspend fun deleteAlert(alert: AlertEntity) {
+        localSource.deleteAlert(alert)
     }
 }

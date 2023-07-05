@@ -22,4 +22,6 @@ interface SettingsSharedPreferencesSource {
     fun getTemperatureOption(): String?
     fun setMapFavorite(isFavorite: Boolean)
     fun getMapFavorite(): Boolean
+    fun getDetails(): Boolean
+    fun setDetails(isDetails: Boolean)
 }

@@ -2,13 +2,18 @@ package com.example.weather.database
 
 import android.content.Context
 import androidx.room.*
+import com.example.weather.model.pojo.AlertEntity
 import com.example.weather.model.pojo.FavoritePlace
 import com.example.weather.model.pojo.WeatherResponseEntity
 
-@Database(entities = [WeatherResponseEntity::class , FavoritePlace::class], version = 1)
+@Database(
+    entities = [WeatherResponseEntity::class, FavoritePlace::class, AlertEntity::class],
+    version = 1
+)
 @TypeConverters(Converter::class)
 abstract class WeatherDatabase : RoomDatabase() {
     abstract fun getWeatherDAo(): WeatherDao
+    abstract fun getAlertDao(): AlertDao
 
     companion object {
         @Volatile

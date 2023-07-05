@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose
 
 @Entity(tableName = "weather")
 data class WeatherResponseEntity(
+    val alerts: List<Alert>? = null,
     val current: Current,
     val daily: List<Daily>,
     val hourly: List<Hourly>,

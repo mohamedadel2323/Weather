@@ -7,10 +7,15 @@ import com.google.gson.Gson
 class Converter {
 
     @TypeConverter
-    fun fromAlertsList(alerts: List<Alert>) = Gson().toJson(alerts)
+    fun fromAlertsList(alerts: List<Alert>?) = Gson().toJson(alerts)
 
     @TypeConverter
-    fun toAlertsList(alerts: String) = Gson().fromJson(alerts, Array<Alert>::class.java).toList()
+    fun toAlertsList(alerts: String?): List<Alert>? {
+        alerts?.let {
+            return Gson().fromJson(it, Array<Alert>::class.java)?.toList()
+        }
+        return listOf<Alert>()
+    }
 
     @TypeConverter
     fun fromCurrent(current: Current) = Gson().toJson(current)
