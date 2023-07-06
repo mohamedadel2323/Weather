@@ -1,5 +1,6 @@
 package com.example.weather.settings.view
 
+
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,7 +18,7 @@ import com.example.weather.network.ApiClient
 import com.example.weather.settings.viewmodel.SettingsFragmentViewModel
 import com.example.weather.settings.viewmodel.SettingsFragmentViewModelFactory
 import com.example.weather.shared_preferences.SettingsSharedPreferences
-import timber.log.Timber
+import java.util.*
 
 
 class SettingsFragment : Fragment() {
@@ -29,7 +30,7 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         fragmentSettingsBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_settings, container, false)
@@ -99,8 +100,14 @@ class SettingsFragment : Fragment() {
 
         fragmentSettingsBinding.settingsLanguageRg.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
-                R.id.englishRb -> settingsFragmentViewModel.setLanguageOption(Constants.ENGLISH)
-                else -> settingsFragmentViewModel.setLanguageOption(Constants.ARABIC)
+                R.id.englishRb -> {
+                    settingsFragmentViewModel.setLanguageOption(Constants.ENGLISH)
+                    updateLocal(Locale("en"))
+                }
+                else -> {
+                    updateLocal(Locale("ar"))
+                    settingsFragmentViewModel.setLanguageOption(Constants.ARABIC)
+                }
             }
         }
         fragmentSettingsBinding.settingsTemperatureRg.setOnCheckedChangeListener { _, checkedId ->
@@ -136,5 +143,10 @@ class SettingsFragment : Fragment() {
                 else -> settingsFragmentViewModel.setNotificationOption(false)
             }
         }
+    }
+
+    private fun updateLocal(locale: Locale){
+        Locale.setDefault(locale)
+        requireActivity().recreate()
     }
 }

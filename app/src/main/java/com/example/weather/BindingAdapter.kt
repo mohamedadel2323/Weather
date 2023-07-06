@@ -10,7 +10,11 @@ import androidx.core.content.ContextCompat
 
 @BindingAdapter("dayName")
 fun convertTimeStampToDayName(view: TextView, timeStamp: Int?) {
-    val sdf = SimpleDateFormat("EEEE", Locale.getDefault())
+    val sharedPreferences = view.context.getSharedPreferences(
+        Constants.PREFERENCES_NAME,
+        AppCompatActivity.MODE_PRIVATE
+    )
+    val sdf = SimpleDateFormat("EEEE", Locale(sharedPreferences.getString(Constants.LANGUAGE , "en")))
     val date = Date(timeStamp?.times(1000L) ?: 0)
     val dayOfWeek = sdf.format(date)
     view.text = dayOfWeek
@@ -18,7 +22,11 @@ fun convertTimeStampToDayName(view: TextView, timeStamp: Int?) {
 
 @BindingAdapter("date")
 fun convertTimeStampToDate(view: TextView, timeStamp: Int?) {
-    val sdf = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+    val sharedPreferences = view.context.getSharedPreferences(
+        Constants.PREFERENCES_NAME,
+        AppCompatActivity.MODE_PRIVATE
+    )
+    val sdf = SimpleDateFormat("dd MMM yyyy", Locale(sharedPreferences.getString(Constants.LANGUAGE , "en")))
     val date = Date(timeStamp?.times(1000L) ?: 0)
     val dayOfWeek = sdf.format(date)
     view.text = dayOfWeek
@@ -26,7 +34,11 @@ fun convertTimeStampToDate(view: TextView, timeStamp: Int?) {
 
 @BindingAdapter("time")
 fun convertTimeStampToCompleteDate(view: TextView, timeStamp: Long?) {
-    val sdf = SimpleDateFormat("h:mm a\ndd MMM", Locale.getDefault())
+    val sharedPreferences = view.context.getSharedPreferences(
+        Constants.PREFERENCES_NAME,
+        AppCompatActivity.MODE_PRIVATE
+    )
+    val sdf = SimpleDateFormat("h:mm a\ndd MMM", Locale(sharedPreferences.getString(Constants.LANGUAGE, "en")))
     val date = Date(timeStamp?: 0)
     val dayOfWeek = sdf.format(date)
     view.text = dayOfWeek
@@ -34,7 +46,11 @@ fun convertTimeStampToCompleteDate(view: TextView, timeStamp: Long?) {
 
 @BindingAdapter("hour")
 fun convertTimeStampToHour(view: TextView, timeStamp: Int?) {
-    val sdf = SimpleDateFormat("hh:mm a", Locale.getDefault())
+    val sharedPreferences = view.context.getSharedPreferences(
+        Constants.PREFERENCES_NAME,
+        AppCompatActivity.MODE_PRIVATE
+    )
+    val sdf = SimpleDateFormat("hh:mm a", Locale(sharedPreferences.getString(Constants.LANGUAGE,"en")))
     val date = Date(timeStamp?.times(1000L) ?: 0)
     val dayOfWeek = sdf.format(date)
     view.text = dayOfWeek

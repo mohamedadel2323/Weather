@@ -40,6 +40,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class AlertFragment : Fragment() {
@@ -49,6 +50,7 @@ class AlertFragment : Fragment() {
     lateinit var alertsViewModel: AlertsViewModel
     lateinit var alertsViewModelFactory: AlertsViewModelFactory
     lateinit var alertAdapter: AlertAdapter
+    lateinit var workManager: WorkManager
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -61,6 +63,7 @@ class AlertFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        workManager = WorkManager.getInstance(requireContext())
         alertAdapter = AlertAdapter { deleteOnLongClick(it) }
         setRecycler()
         alertsViewModelFactory = AlertsViewModelFactory(
@@ -112,44 +115,61 @@ class AlertFragment : Fragment() {
             customAlertDialogBinding.saveButton.setOnClickListener {
                 if (startCalender != null && endCalender != null) {
                     if (alertsViewModel.getLatitude() != 0.0 && alertsViewModel.getLongitude() != 0.0) {
+                        startCalender!!.set(Calendar.SECOND , 0)
+                        endCalender!!.set(Calendar.SECOND , 0)
                         val startTime = startCalender!!.timeInMillis
                         val endTime = endCalender!!.timeInMillis
-                        alertsViewModel.insertAlert(
-                            AlertEntity(
-                                startTime = startTime,
-                                endTime = endTime,
-                                latitude = alertsViewModel.getLatitude(),
-                                longitude = alertsViewModel.getLongitude()
-                            )
+                        val alertEntity = AlertEntity(
+                            startTime = startTime,
+                            endTime = endTime,
+                            latitude = alertsViewModel.getLatitude(),
+                            longitude = alertsViewModel.getLongitude()
                         )
                         startCalender = null
                         endCalender = null
-//                    val workManager = WorkManager.getInstance(requireContext())
-//                    val inputDate = Data.Builder().apply {
-//                        putLong(Constants.START_TIME, startCalender!!.timeInMillis)
-//                        putLong(Constants.END_TIME, endCalender!!.timeInMillis)
-//                    }
-//                    val constraints = Constraints.Builder()
-//                        .setRequiredNetworkType(NetworkType.CONNECTED)
-//                        .build()
-//                    val request = OneTimeWorkRequestBuilder<AlertWorker>()
-//                        .setConstraints(constraints)
-//                        .build()
+                        val inputDate = Data.Builder().apply {
+                            putLong(Constants.START_TIME, startTime)
+                            putLong(Constants.END_TIME, endTime)
+                            putDouble(Constants.LATITUDE, alertEntity.latitude)
+                            putDouble(Constants.LONGITUDE, alertEntity.longitude)
+                        }.build()
+                        val constraints = Constraints.Builder()
+                            .setRequiredNetworkType(NetworkType.CONNECTED)
+                            .build()
+                        val request = OneTimeWorkRequestBuilder<AlertWorker>().apply {
+                            setConstraints(constraints)
+                            setInputData(inputDate)
+                            setInitialDelay(
+                                startTime - System.currentTimeMillis(),
+                                TimeUnit.MILLISECONDS
+                            )
+                        }.build()
+                        workManager.enqueue(request)
+                        alertEntity.id = request.id
+                        alertsViewModel.insertAlert(alertEntity)
                     } else {
                         Toast.makeText(
                             requireContext(),
-                            "You need to specify location",
+                            getString(R.string.need_location),
                             Toast.LENGTH_SHORT
                         )
                             .show()
                     }
 
                 } else {
-                    Toast.makeText(requireContext(), "Please specify you time", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), getString(R.string.specify_your_time), Toast.LENGTH_SHORT)
                         .show()
                 }
 
                 dismiss()
+            }
+            customAlertDialogBinding.dialogAlertRb.setOnClickListener {
+                customAlertDialogBinding.dialogRg.setOnCheckedChangeListener { _, checkedId ->
+                    when(checkedId){
+                        R.id.dialogAlertRb -> alertsViewModel.setNotificationOption(true)
+                        R.id.dialogNotificationRb -> alertsViewModel.setNotificationOption(false)
+                    }
+                }
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
@@ -227,7 +247,7 @@ class AlertFragment : Fragment() {
                 "Delete"
             ) { dialog, _ ->
                 alertsViewModel.deleteAlert(alertEntity)
-                //todo dismiss the alert
+                workManager.cancelWorkById(alertEntity.id)
                 dialog.cancel()
             }
             setNegativeButton(

@@ -35,7 +35,9 @@ android {
         }
         buildConfigField("String", "API_KEY", "\"$apiKey\"")
 
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        resConfigs "en", "ar"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 }
 
 buildTypes {

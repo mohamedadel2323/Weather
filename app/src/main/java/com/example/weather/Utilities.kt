@@ -2,6 +2,7 @@ package com.example.weather
 
 import android.Manifest
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.net.ConnectivityManager
@@ -12,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.weather.model.pojo.WeatherResponse
 import com.example.weather.model.pojo.WeatherResponseEntity
+import java.util.Locale
 
 fun checkPermissions(context: Context): Boolean {
     return (ContextCompat.checkSelfPermission(
@@ -47,4 +49,14 @@ fun WeatherResponse.toWeatherResponseEntity() = WeatherResponseEntity(
     this.alerts,
     this.current, this.daily, this.hourly, this.lat, this.lon, this.timezone, this.timezone_offset
 )
+
+fun updateLocale(context: Context, locale: Locale): ContextWrapper {
+    val configuration = context.resources.configuration
+    configuration.apply {
+        setLocale(locale)
+        setLayoutDirection(locale)
+    }
+    val mContext = context.createConfigurationContext(configuration)
+    return ContextWrapper(mContext)
+}
 

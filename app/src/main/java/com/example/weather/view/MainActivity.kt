@@ -1,21 +1,18 @@
 package com.example.weather.view
 
-import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
-import com.example.weather.BuildConfig
 import com.example.weather.Constants
 import com.example.weather.R
 import com.example.weather.database.ConcreteLocalSource
@@ -24,9 +21,10 @@ import com.example.weather.databinding.CustomSettingsDialogBinding
 import com.example.weather.model.Repository
 import com.example.weather.network.ApiClient
 import com.example.weather.shared_preferences.SettingsSharedPreferences
+import com.example.weather.updateLocale
 import com.example.weather.viewmodel.MainActivityViewModel
 import com.example.weather.viewmodel.MainActivityViewModelFactory
-import com.google.android.libraries.places.api.Places
+import java.util.Locale
 
 const val My_LOCATION_PERMISSION_ID = 5005
 
@@ -63,14 +61,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun requestPermissions() {
-        ActivityCompat.requestPermissions(
-            this, arrayOf(
-                Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ),
-            My_LOCATION_PERMISSION_ID
-        )
+    override fun attachBaseContext(newBase: Context) {
+        val context = updateLocale(newBase,Locale.getDefault())
+        super.attachBaseContext(context)
     }
 
 

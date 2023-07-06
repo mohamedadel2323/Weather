@@ -19,6 +19,8 @@ class MainActivityViewModel(private val repository: RepoInterface) : ViewModel()
 
     fun getFirstTime() = repository.getFirstTime()
 
+    fun getLanguage() = repository.getLanguageOption()
+
     fun setLocationOption(option: String) {
         repository.setLocationOption(option)
     }

@@ -38,6 +38,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -48,8 +49,11 @@ class MapsFragment : Fragment() {
     lateinit var mapsFragmentsViewModel: MapsFragmentsViewModel
     lateinit var mapsFragmentViewModelFactory: MapsFragmentViewModelFactory
     private var locationLatLng: LatLng? = null
+    private lateinit var map: GoogleMap
+
     @RequiresApi(Build.VERSION_CODES.M)
     private val callback = OnMapReadyCallback { googleMap ->
+        map = googleMap
         setMapClick(googleMap)
     }
 
@@ -98,6 +102,7 @@ class MapsFragment : Fragment() {
                         Timber.e(
                             "Place: ${place.name}, ${place.id}, ${place.latLng}"
                         )
+                        showGooglePlaceDialog(place)
                     }
                 } else if (result.resultCode == Activity.RESULT_CANCELED) {
                     // The user canceled the operation.
@@ -110,9 +115,9 @@ class MapsFragment : Fragment() {
         fragmentMapsBinding.searchIcon.setOnClickListener {
             try {
                 val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
-
                 // Start the autocomplete intent.
                 val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+                    .setTypeFilter(TypeFilter.CITIES)
                     .build(requireContext())
                 startAutocomplete.launch(intent)
             } catch (ex: Exception) {
@@ -157,14 +162,49 @@ class MapsFragment : Fragment() {
                         }
                     }
                     showDialog(geocoderArr)
-                }else{
-                    Toast.makeText(requireContext(), "No Connection", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), getString(R.string.no_connection), Toast.LENGTH_SHORT).show()
                     Navigation.findNavController(requireView()).navigateUp()
                 }
             }
         }
     }
 
+    private fun showGooglePlaceDialog(place: Place) {
+        map.addMarker(MarkerOptions().position(place.latLng))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(place.latLng, 10f))
+        val customSaveDialogBinding = CustomSaveDialogBinding.inflate(layoutInflater)
+
+        AlertDialog.Builder(requireContext()).create().apply {
+            setView(customSaveDialogBinding.root)
+
+            customSaveDialogBinding.placeTv.text = place.name
+            customSaveDialogBinding.saveBtn.setOnClickListener {
+                //if user opened map fragment from favorites fragment
+                if (mapsFragmentsViewModel.getMapFavorite()) {
+                    mapsFragmentsViewModel.addFavoritePlace(
+                        FavoritePlace(
+                            placeName = place.name,
+                            latitude = place.latLng.latitude,
+                            longitude = place.latLng.longitude
+                        )
+                    )
+                } else {
+                    mapsFragmentsViewModel.setLatitude(locationLatLng!!.latitude)
+                    mapsFragmentsViewModel.setLongitude(locationLatLng!!.longitude)
+                }
+                dismiss()
+                findNavController().navigateUp()
+            }
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            window?.setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT
+            )
+            window?.setGravity(Gravity.BOTTOM)
+            show()
+        }
+    }
 
     private fun showDialog(geocoderArr: MutableList<Address>?) {
 
@@ -173,7 +213,7 @@ class MapsFragment : Fragment() {
         AlertDialog.Builder(requireContext()).create().apply {
             setView(customSaveDialogBinding.root)
             if (geocoderArr.isNullOrEmpty()) {
-                customSaveDialogBinding.placeTv.text = "Unknown pick valid one please"
+                customSaveDialogBinding.placeTv.text = getString(R.string.pick_vaild_place)
                 customSaveDialogBinding.saveBtn.visibility = View.GONE
             } else {
                 customSaveDialogBinding.placeTv.text = geocoderArr?.get(0)?.countryName ?: ""

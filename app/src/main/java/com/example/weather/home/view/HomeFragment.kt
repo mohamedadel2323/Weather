@@ -82,7 +82,7 @@ class HomeFragment : Fragment() {
         if (homeFragmentViewModel.getDetails()) {
             homeFragmentViewModel.setDetails(false)
             favoritePlace = HomeFragmentArgs.fromBundle(requireArguments()).favorite
-        }else{
+        } else {
             favoritePlace = null
         }
 
@@ -118,7 +118,11 @@ class HomeFragment : Fragment() {
                     fragmentHomeBinding.homeScrollView.visibility = View.GONE
                 }
             } else {
-                Toast.makeText(requireContext(), "No Connection", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.no_connection),
+                    Toast.LENGTH_SHORT
+                ).show()
                 getWeatherFromDatabase()
             }
         } else if (locationOption == Constants.MAP) {
@@ -148,7 +152,11 @@ class HomeFragment : Fragment() {
                 }
                 getWeather()
             } else {
-                Toast.makeText(requireContext(), "No Connection", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    resources.getString(R.string.no_connection),
+                    Toast.LENGTH_SHORT
+                ).show()
                 getWeatherFromDatabase()
             }
         }
@@ -186,10 +194,10 @@ class HomeFragment : Fragment() {
                     } else {
                         Snackbar.make(
                             requireView(),
-                            "Turn on location please",
+                            resources.getString(R.string.turn_on_location),
                             Snackbar.LENGTH_SHORT
                         ).apply {
-                            setAction("Enable") {
+                            setAction(resources.getString(R.string.enable)) {
                                 Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).apply {
                                     startActivity(this)
                                 }
@@ -234,7 +242,7 @@ class HomeFragment : Fragment() {
             } else {
                 Snackbar.make(
                     requireView(),
-                    "Turn on location please",
+                    getString(R.string.turn_on_location),
                     Toast.LENGTH_SHORT
                 ).apply {
                     setAction("Enable") {
@@ -302,7 +310,7 @@ class HomeFragment : Fragment() {
                         hourlyAdapter.submitList(apiState.data?.hourly)
                         dailyAdapter.submitList(apiState.data?.daily)
                         fragmentHomeBinding.placeTv.text =
-                            apiState.data?.timezone ?: "Unknown"
+                            apiState.data?.timezone ?: resources.getString(R.string.unknown)
                         fragmentHomeBinding.homeProgressBar.visibility = View.GONE
 
                     }

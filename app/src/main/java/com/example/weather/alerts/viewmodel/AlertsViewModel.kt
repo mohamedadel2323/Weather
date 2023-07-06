@@ -38,4 +38,10 @@ class AlertsViewModel(private val repository: RepoInterface) : ViewModel() {
     fun getLatitude() = repository.getLatitude()
 
     fun getLongitude() = repository.getLongitude()
+
+    fun setNotificationOption(isEnabled: Boolean) {
+        repository.setNotificationOption(isEnabled)
+    }
+
+    fun getNotificationOption() = repository.getNotificationOption()
 }
