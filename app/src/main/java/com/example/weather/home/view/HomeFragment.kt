@@ -193,7 +193,7 @@ class HomeFragment : Fragment() {
                         getWeather()
                     } else {
                         Snackbar.make(
-                            requireView(),
+                            requireActivity().findViewById(android.R.id.content),
                             resources.getString(R.string.turn_on_location),
                             Snackbar.LENGTH_SHORT
                         ).apply {
@@ -219,6 +219,8 @@ class HomeFragment : Fragment() {
                     homeFragmentViewModel.requestNewLocationData(fusedClient).collectLatest {
                         when (it) {
                             is ApiState.SuccessLocation -> it.location?.let { it1 ->
+                                homeFragmentViewModel.setLatitude(it1.latitude)
+                                homeFragmentViewModel.setLongitude(it1.longitude)
                                 homeFragmentViewModel.getWeather(
                                     it1,
                                     homeFragmentViewModel.getTemperatureOption()!!,
@@ -241,11 +243,11 @@ class HomeFragment : Fragment() {
                 }
             } else {
                 Snackbar.make(
-                    requireView(),
+                    requireActivity().findViewById(android.R.id.content),
                     getString(R.string.turn_on_location),
-                    Toast.LENGTH_SHORT
+                    Snackbar.LENGTH_SHORT
                 ).apply {
-                    setAction("Enable") {
+                    setAction(getString(R.string.enable)) {
                         Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).apply {
                             startActivity(this)
                         }

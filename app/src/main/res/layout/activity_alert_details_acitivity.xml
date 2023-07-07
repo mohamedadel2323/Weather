@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="alert"
+            type="com.example.weather.model.pojo.Alert" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/purple_700"
+        tools:context=".AlertDetailsActivity">
+
+
+        <TextView
+            android:id="@+id/alertDetailsTv"
+            style="@style/TextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/item_back"
+            android:padding="8dp"
+            android:text="@string/alert_details"
+            android:textAlignment="center"
+            android:textStyle="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/senderTv"
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/sender"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/senderValueTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/senderValueTv" />
+
+        <TextView
+            android:id="@+id/senderValueTv"
+            style="@style/TextViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{alert.sender_name}"
+            android:textColor="@color/small_text"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/descriptionTv"
+            app:layout_constraintTop_toBottomOf="@id/alertDetailsTv" />
+
+
+        <TextView
+            android:id="@+id/eventTv"
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/event"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/eventValueTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/eventValueTv" />
+
+        <TextView
+            android:id="@+id/eventValueTv"
+            style="@style/TextViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="@{alert.event}"
+            android:textColor="@color/small_text"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/descriptionTv"
+            app:layout_constraintTop_toBottomOf="@id/senderValueTv" />
+
+        <TextView
+            android:id="@+id/startTimeTv"
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/start_time"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/startTimeValueTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/startTimeValueTv" />
+
+        <TextView
+            android:id="@+id/startTimeValueTv"
+            style="@style/TextViewStyle"
+            fullDate="@{alert.start}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/small_text"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/descriptionTv"
+            app:layout_constraintTop_toBottomOf="@id/eventValueTv" />
+
+        <TextView
+            android:id="@+id/endTimeTv"
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/end_time"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/endTimeValueTv"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/endTimeValueTv" />
+
+        <TextView
+            android:id="@+id/endTimeValueTv"
+            style="@style/TextViewStyle"
+            fullDate="@{alert.end}"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/small_text"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/descriptionTv"
+            app:layout_constraintTop_toBottomOf="@id/startTimeValueTv" />
+
+        <TextView
+            android:id="@+id/descriptionTv"
+            style="@style/TextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/description"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@id/descriptionValueSV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/descriptionValueSV" />
+
+        <ScrollView
+            android:id="@+id/descriptionValueSV"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/descriptionTv"
+            app:layout_constraintTop_toBottomOf="@id/endTimeValueTv">
+
+            <TextView
+
+                android:id="@+id/descriptionValueTv"
+                style="@style/TextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@{alert.description}"
+                android:textColor="@color/small_text"
+                android:textSize="15sp" />
+
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

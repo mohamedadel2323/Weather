@@ -6,7 +6,6 @@ import androidx.databinding.BindingAdapter
 import com.airbnb.lottie.LottieAnimationView
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.core.content.ContextCompat
 
 @BindingAdapter("dayName")
 fun convertTimeStampToDayName(view: TextView, timeStamp: Int?) {
@@ -14,22 +13,28 @@ fun convertTimeStampToDayName(view: TextView, timeStamp: Int?) {
         Constants.PREFERENCES_NAME,
         AppCompatActivity.MODE_PRIVATE
     )
-    val sdf = SimpleDateFormat("EEEE", Locale(sharedPreferences.getString(Constants.LANGUAGE , "en")))
+    val sdf =
+        SimpleDateFormat("EEEE",
+            sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) })
     val date = Date(timeStamp?.times(1000L) ?: 0)
     val dayOfWeek = sdf.format(date)
     view.text = dayOfWeek
 }
 
-@BindingAdapter("date")
-fun convertTimeStampToDate(view: TextView, timeStamp: Int?) {
+@BindingAdapter(value = ["bind:date", "bind:timeOffset"], requireAll = true)
+fun convertTimeStampToCurrentHour(view: TextView, currentDate: Int?, offset:Int?) {
     val sharedPreferences = view.context.getSharedPreferences(
         Constants.PREFERENCES_NAME,
         AppCompatActivity.MODE_PRIVATE
     )
-    val sdf = SimpleDateFormat("dd MMM yyyy", Locale(sharedPreferences.getString(Constants.LANGUAGE , "en")))
-    val date = Date(timeStamp?.times(1000L) ?: 0)
-    val dayOfWeek = sdf.format(date)
-    view.text = dayOfWeek
+    val sdf = SimpleDateFormat(
+        "hh:mm a",
+        sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) }
+    )
+    sdf.timeZone = TimeZone.getTimeZone("GMT")
+    val date = currentDate?.let { Date(it.times(1000L).plus(offset!!.times(1000L)) ) }
+    val currentTime = sdf.format(date)
+    view.text = currentTime
 }
 
 @BindingAdapter("time")
@@ -38,8 +43,26 @@ fun convertTimeStampToCompleteDate(view: TextView, timeStamp: Long?) {
         Constants.PREFERENCES_NAME,
         AppCompatActivity.MODE_PRIVATE
     )
-    val sdf = SimpleDateFormat("h:mm a\ndd MMM", Locale(sharedPreferences.getString(Constants.LANGUAGE, "en")))
-    val date = Date(timeStamp?: 0)
+    val sdf = SimpleDateFormat(
+        "h:mm a\ndd MMM",
+        sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) }
+    )
+    val date = Date(timeStamp ?: 0)
+    val dayOfWeek = sdf.format(date)
+    view.text = dayOfWeek
+}
+
+@BindingAdapter("fullDate")
+fun convertTimeStampToCompleteDate2(view: TextView, timeStamp: Int?) {
+    val sharedPreferences = view.context.getSharedPreferences(
+        Constants.PREFERENCES_NAME,
+        AppCompatActivity.MODE_PRIVATE
+    )
+    val sdf = SimpleDateFormat(
+        "dd MMM yyyy h:mm a",
+        sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) }
+    )
+    val date = Date(timeStamp?.times(1000L) ?: 0)
     val dayOfWeek = sdf.format(date)
     view.text = dayOfWeek
 }
@@ -50,7 +73,9 @@ fun convertTimeStampToHour(view: TextView, timeStamp: Int?) {
         Constants.PREFERENCES_NAME,
         AppCompatActivity.MODE_PRIVATE
     )
-    val sdf = SimpleDateFormat("hh:mm a", Locale(sharedPreferences.getString(Constants.LANGUAGE,"en")))
+    val sdf =
+        SimpleDateFormat("hh:mm a",
+            sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) })
     val date = Date(timeStamp?.times(1000L) ?: 0)
     val dayOfWeek = sdf.format(date)
     view.text = dayOfWeek
@@ -70,6 +95,11 @@ fun currentDegreeFormatter(view: TextView, degree: Double?) {
         else -> view.text =
             String.format(view.context.getString(R.string.singleDegreeFormatK), degree)
     }
+}
+
+@BindingAdapter("uvi")
+fun uviFormatter(view: TextView, uvi: Double) {
+    view.text = String.format(view.context.getString(R.string.uvi_Format), uvi)
 }
 
 @BindingAdapter(value = ["bind:first", "bind:second"], requireAll = true)

@@ -53,10 +53,22 @@
     <string name="windFormatMeter">%1.2f m/s</string>
     <string name="windFormatMile">%1.2f m/h</string>
     <string name="visibilityFormat">%d m</string>
+    <string name="uvi_Format">%.2f UVI"</string>
     <string name="set_location">Set Location</string>
     <string name="specify_your_time">Please specify you time</string>
     <string name="need_location">You need to specify location</string>
     <string name="no_connection">No Connection</string>
     <string name="pick_vaild_place">Unknown pick valid one please</string>
     <string name="turn_on_location">Turn on location please</string>
+    <string name="alert_notification_id" translatable="false">1</string>
+    <string name="alert_notification_title">Weather State</string>
+    <string name="channel_name">alerts</string>
+    <string name="channel_description">Notification for weather state</string>
+    <string name="no_alerts">Weather is fine, No alerts for scheduled time</string>
+    <string name="alert_details">Alert Details</string>
+    <string name="sender">Sender:</string>
+    <string name="event">Event:</string>
+    <string name="start_time">Start Time:</string>
+    <string name="end_time">End Time:</string>
+    <string name="description">Description:</string>
 </resources>

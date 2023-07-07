@@ -15,6 +15,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.example.weather.Constants
 import com.example.weather.R
+import com.example.weather.createNotificationChannel
 import com.example.weather.database.ConcreteLocalSource
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.databinding.CustomSettingsDialogBinding
@@ -36,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createNotificationChannel(this)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         mainActivityViewModelFactory = MainActivityViewModelFactory(
             (Repository.getInstance(
@@ -62,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun attachBaseContext(newBase: Context) {
-        val context = updateLocale(newBase,Locale.getDefault())
+        val context = updateLocale(newBase, Locale.getDefault())
         super.attachBaseContext(context)
     }
 
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this).create().apply {
             setView(settingsDialogBinding.root)
 
-            settingsDialogBinding.settingsRg.setOnCheckedChangeListener { group, checkedId ->
+            settingsDialogBinding.settingsRg.setOnCheckedChangeListener { _, checkedId ->
                 when (checkedId) {
                     R.id.settingsGpsRb -> mainActivityViewModel.setLocationOption(Constants.GPS)
                     R.id.settingsLocationRb -> mainActivityViewModel.setLocationOption(Constants.MAP)

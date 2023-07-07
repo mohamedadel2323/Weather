@@ -7,4 +7,4 @@ data class Alert(
     val sender_name: String,
     val start: Int,
     val tags: List<String>
-)
+):java.io.Serializable

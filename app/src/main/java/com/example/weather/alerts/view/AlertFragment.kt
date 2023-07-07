@@ -3,26 +3,25 @@ package com.example.weather.alerts.view
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.DialogInterface
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.Constraints
-import androidx.work.Data
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.example.weather.Constants
 import com.example.weather.R
 import com.example.weather.alerts.AlertWorker
@@ -42,7 +41,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-
+private const val REQUEST_OVERLAY_PERMISSION=5
 class AlertFragment : Fragment() {
     private var startCalender: Calendar? = null
     private var endCalender: Calendar? = null
@@ -61,6 +60,7 @@ class AlertFragment : Fragment() {
         return fragmentAlertBinding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         workManager = WorkManager.getInstance(requireContext())
@@ -86,14 +86,26 @@ class AlertFragment : Fragment() {
                     }
 
                 }
-                alertAdapter.submitList(alertList.sortedBy { it.id }.reversed())
+                alertAdapter.submitList(alertList.sortedBy { it.startTime }.reversed())
             }
         }
         fragmentAlertBinding.addAlertFab.setOnClickListener {
-            showDialog()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.canDrawOverlays(context)) {
+                    val intent = Intent(
+                        Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:" + requireContext().packageName)
+                    )
+                    startActivityForResult(intent, REQUEST_OVERLAY_PERMISSION)
+                } else {
+                    showDialog()
+                }
+            }
+
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun showDialog() {
 
         val customAlertDialogBinding = CustomAlertDialogBinding.inflate(layoutInflater)
@@ -115,15 +127,20 @@ class AlertFragment : Fragment() {
             customAlertDialogBinding.saveButton.setOnClickListener {
                 if (startCalender != null && endCalender != null) {
                     if (alertsViewModel.getLatitude() != 0.0 && alertsViewModel.getLongitude() != 0.0) {
-                        startCalender!!.set(Calendar.SECOND , 0)
-                        endCalender!!.set(Calendar.SECOND , 0)
+                        startCalender!!.set(Calendar.SECOND, 0)
+                        endCalender!!.set(Calendar.SECOND, 0)
                         val startTime = startCalender!!.timeInMillis
                         val endTime = endCalender!!.timeInMillis
+                        var isNotification = false
+                        if (alertsViewModel.getNotificationOption()) {
+                            isNotification = true
+                        }
                         val alertEntity = AlertEntity(
                             startTime = startTime,
                             endTime = endTime,
                             latitude = alertsViewModel.getLatitude(),
-                            longitude = alertsViewModel.getLongitude()
+                            longitude = alertsViewModel.getLongitude(),
+                            isNotification = isNotification
                         )
                         startCalender = null
                         endCalender = null
@@ -132,6 +149,7 @@ class AlertFragment : Fragment() {
                             putLong(Constants.END_TIME, endTime)
                             putDouble(Constants.LATITUDE, alertEntity.latitude)
                             putDouble(Constants.LONGITUDE, alertEntity.longitude)
+                            putBoolean(Constants.NOTIFICATION_OPTION, alertEntity.isNotification)
                         }.build()
                         val constraints = Constraints.Builder()
                             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -157,18 +175,20 @@ class AlertFragment : Fragment() {
                     }
 
                 } else {
-                    Toast.makeText(requireContext(), getString(R.string.specify_your_time), Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.specify_your_time),
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
 
                 dismiss()
             }
-            customAlertDialogBinding.dialogAlertRb.setOnClickListener {
-                customAlertDialogBinding.dialogRg.setOnCheckedChangeListener { _, checkedId ->
-                    when(checkedId){
-                        R.id.dialogAlertRb -> alertsViewModel.setNotificationOption(true)
-                        R.id.dialogNotificationRb -> alertsViewModel.setNotificationOption(false)
-                    }
+            customAlertDialogBinding.dialogRg.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
+                    R.id.dialogNotificationRb -> alertsViewModel.setNotificationOption(true)
+                    R.id.dialogAlertRb -> alertsViewModel.setNotificationOption(false)
                 }
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

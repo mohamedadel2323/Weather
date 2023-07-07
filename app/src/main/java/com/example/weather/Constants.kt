@@ -20,6 +20,9 @@ object Constants {
     const val DETAILS = "details"
     const val START_TIME = "startTime"
     const val END_TIME = "endTime"
+    const val DESCRIPTION = "description"
+    const val SENDER_NAME = "senderName"
+    const val EVENT = "event"
     //Temperature in Celsius and wind speed in meter/sec
     const val METRIC = "metric"
     //Temperature in Fahrenheit and wind speed in miles/hour

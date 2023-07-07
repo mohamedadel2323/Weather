@@ -11,5 +11,6 @@ data class AlertEntity(
     var startTime: Long,
     var endTime: Long,
     val longitude: Double,
-    val latitude: Double
+    val latitude: Double,
+    val isNotification : Boolean
 )

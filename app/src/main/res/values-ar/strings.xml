@@ -53,10 +53,21 @@
     <string name="windFormatMeter">%1.2f م/ث</string>
     <string name="windFormatMile">%1.2f م/س</string>
     <string name="visibilityFormat">%d م</string>
+    <string name="uvi_Format">%.2f </string>
     <string name="set_location">تحديد الموقع</string>
     <string name="specify_your_time">من فضلك حدد الوقت</string>
     <string name="need_location">تحتاج لتحديد الموقع</string>
     <string name="no_connection">لا اتصال</string>
     <string name="pick_vaild_place">غير محدد اختر مكاناً محدداً من فضلك</string>
     <string name="turn_on_location">فعل تحديد الموقع من فضلك</string>
+    <string name="alert_notification_title">حالة الطقس</string>
+    <string name="channel_name">التحذيرات</string>
+    <string name="channel_description">إشعارات لحالة الطقس</string>
+    <string name="no_alerts">حالة الطقس جيدة، لا يوجد تحذيرات في الفترة المحددة</string>
+    <string name="alert_details">تفاصيل تنبيه الجو</string>
+    <string name="sender">المرسل:</string>
+    <string name="event">الحدث:</string>
+    <string name="start_time">وقت البداية:</string>
+    <string name="end_time">وقت النهاية:</string>
+    <string name="description">التفاصيل:</string>
 </resources>

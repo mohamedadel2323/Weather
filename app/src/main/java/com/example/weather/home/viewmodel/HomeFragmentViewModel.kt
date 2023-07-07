@@ -32,16 +32,22 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
 
     @SuppressLint("MissingPermission")
     fun requestNewLocationData(fusedClient: FusedLocationProviderClient): StateFlow<ApiState> {
-        fusedClient.lastLocation.addOnSuccessListener {
-            _locationStateFlow.value = ApiState.SuccessLocation(Location(it.longitude, it.latitude))
+        fusedClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                _locationStateFlow.value =
+                    ApiState.SuccessLocation(Location(location.longitude, location.latitude))
+            } else {
+                _locationStateFlow.value = ApiState.Failure("Location not available")
+            }
+
         }
         return locationStateFlow
     }
 
-    fun getWeather(location: Location , unit : String , language : String) {
+    fun getWeather(location: Location, unit: String, language: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                repository.getWeather(location , unit , language).catch {
+                repository.getWeather(location, unit, language).catch {
                     _weatherResponseStateFlow.emit(ApiState.Failure(it.localizedMessage))
                 }.collect {
                     if (it.isSuccessful) {
@@ -76,6 +82,14 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
         repository.setMapFirstTime(false)
     }
 
+    fun setLatitude(latitude: Double) {
+        repository.setLatitude(latitude)
+    }
+
+    fun setLongitude(longitude: Double) {
+        repository.setLongitude(longitude)
+    }
+
     fun getLatitude() = repository.getLatitude()
 
     fun getLongitude() = repository.getLongitude()
@@ -84,9 +98,10 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
 
     fun getTemperatureOption() = repository.getTemperatureOption()
 
-    fun setDetails(isDetails : Boolean){
+    fun setDetails(isDetails: Boolean) {
         repository.setDetails(isDetails)
     }
+
     fun getDetails() = repository.getDetails()
 
 }

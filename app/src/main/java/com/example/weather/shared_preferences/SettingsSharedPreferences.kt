@@ -74,10 +74,6 @@ class SettingsSharedPreferences private constructor(var context: Context) :
     override fun getLocationOption() =
         sharedPreferences.getString(Constants.LOCATION_OPTION, Constants.GPS) ?: Constants.GPS
 
-    override fun setNotificationOption(state: Boolean) {
-        editor.putBoolean(Constants.NOTIFICATION_OPTION, state)
-        editor.commit()
-    }
 
     override fun getLanguageOption() =
         sharedPreferences.getString(Constants.LANGUAGE, Constants.ENGLISH)
@@ -89,6 +85,11 @@ class SettingsSharedPreferences private constructor(var context: Context) :
 
     override fun getNotificationOption() =
         sharedPreferences.getBoolean(Constants.NOTIFICATION_OPTION, false)
+
+    override fun setNotificationOption(state: Boolean) {
+        editor.putBoolean(Constants.NOTIFICATION_OPTION, state)
+        editor.commit()
+    }
 
     override fun setUnitOption(option: String) {
         editor.putString(Constants.UNIT, option)
