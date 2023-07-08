@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -71,6 +70,18 @@ class FavoritesFragment : Fragment(), OnFavoriteLongClick {
         }
 
 
+        fragmentFavoritesBinding.favoriteInstructionIb.setOnClickListener {
+            AlertDialog.Builder(requireContext()).apply {
+                setTitle(getString(R.string.tip))
+                setMessage(getString(R.string.favorites_instruction))
+                setPositiveButton(
+                    getString(R.string.ok)
+                ) { dialog, _ ->
+                    dialog.cancel()
+                }
+                create().show()
+            }
+        }
 
         fragmentFavoritesBinding.addFavFab.setOnClickListener {
             favoritesFragmentViewModel.setMapFavorite(true)
@@ -98,15 +109,15 @@ class FavoritesFragment : Fragment(), OnFavoriteLongClick {
 
     override fun onFavoriteLongClick(favoritePlace: FavoritePlace) {
         AlertDialog.Builder(requireContext()).apply {
-            setMessage("Confirm Deletion")
+            setMessage(getString(R.string.confirm_deletion))
             setPositiveButton(
-                "Delete"
+                getString(R.string.delete)
             ) { dialog, _ ->
                 favoritesFragmentViewModel.deleteFavorite(favoritePlace)
                 dialog.cancel()
             }
             setNegativeButton(
-                "Back"
+                getString(R.string.back)
             ) { dialog, _ ->
                 dialog.cancel()
             }

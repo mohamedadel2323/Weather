@@ -14,9 +14,9 @@ class AlertDetailsActivity : AppCompatActivity() {
         alertDetailsActivityBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_alert_details_acitivity)
         val alert = Alert(
-            intent.getStringExtra(Constants.DESCRIPTION) ?: "Weather is fine",
+            intent.getStringExtra(Constants.DESCRIPTION) ?: getString(R.string.weather_is_fine),
             intent.getIntExtra(Constants.END_TIME, 0),
-            intent.getStringExtra(Constants.EVENT) ?: "No Event",
+            intent.getStringExtra(Constants.EVENT) ?: getString(R.string.no_event),
             intent.getStringExtra(Constants.SENDER_NAME) ?: "",
             intent.getIntExtra(Constants.START_TIME, 0),
             listOf()

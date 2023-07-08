@@ -70,4 +70,14 @@
     <string name="start_time">وقت البداية:</string>
     <string name="end_time">وقت النهاية:</string>
     <string name="description">التفاصيل:</string>
+    <string name="confirm_deletion">تأكيد الحذف</string>
+    <string name="back">عودة</string>
+    <string name="delete">حذف</string>
+    <string name="favorites_instruction">لحذف عنصر من الأماكن المفضلة قم بعمل ضغطة مطولة على العنصر.</string>
+    <string name="alert_instruction">لحذف عنصر من التنبيهات قم بعمل ضغطة مطولة على العنصر.</string>
+    <string name="tip">معلومة</string>
+    <string name="weather_is_fine">حالة الطقس جيدة.</string>
+    <string name="no_event">لا حدث.</string>
+    <string name="weather_alert">تنبيه الطقس</string>
+    <string name="dismiss">صرف النظر</string>
 </resources>

@@ -64,6 +64,4 @@ fun createNotificationChannel(context: Context) {
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(notificationChannel)
     }
-
-
 }

@@ -29,6 +29,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageButton
+            android:id="@+id/favoriteInstructionIb"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/instruction"
+            app:layout_constraintBottom_toBottomOf="@id/favoritesTitleTv"
+            app:layout_constraintStart_toStartOf="@id/favoritesTitleTv"
+            app:layout_constraintTop_toTopOf="@id/favoritesTitleTv" />
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/noFavoritesLa"
             android:layout_width="wrap_content"

@@ -4,6 +4,7 @@ import com.example.weather.model.pojo.AlertEntity
 import com.example.weather.model.pojo.FavoritePlace
 import com.example.weather.model.pojo.WeatherResponseEntity
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 interface LocalSource {
     suspend fun insertWeather(weatherResponse: WeatherResponseEntity)
@@ -14,4 +15,5 @@ interface LocalSource {
     suspend fun insertAlert(alert: AlertEntity)
     fun getAllAlerts(): Flow<List<AlertEntity>>
     suspend fun deleteAlert(alert: AlertEntity)
+    suspend fun deleteAlertByUuid(uuid: UUID)
 }

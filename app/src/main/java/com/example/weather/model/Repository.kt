@@ -8,6 +8,7 @@ import com.example.weather.shared_preferences.SettingsSharedPreferencesSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import retrofit2.Response
+import java.util.*
 
 class Repository(
     private val sharedPreferencesSource: SettingsSharedPreferencesSource,
@@ -131,5 +132,9 @@ class Repository(
 
     override suspend fun deleteAlert(alert: AlertEntity) {
         localSource.deleteAlert(alert)
+    }
+
+    override suspend fun deleteAlertByUuid(uuid: UUID){
+        localSource.deleteAlertByUuid(uuid)
     }
 }

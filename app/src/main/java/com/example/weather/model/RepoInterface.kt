@@ -3,6 +3,7 @@ package com.example.weather.model
 import com.example.weather.model.pojo.*
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
+import java.util.*
 
 interface RepoInterface {
     fun getFirstTime() : Boolean
@@ -36,4 +37,5 @@ interface RepoInterface {
     fun getAllAlerts(): Flow<List<AlertEntity>>
     suspend fun insertAlert(alert: AlertEntity)
     suspend fun deleteAlert(alert: AlertEntity)
+    suspend fun deleteAlertByUuid(uuid: UUID)
 }

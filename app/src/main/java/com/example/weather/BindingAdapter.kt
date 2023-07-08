@@ -28,7 +28,7 @@ fun convertTimeStampToCurrentHour(view: TextView, currentDate: Int?, offset:Int?
         AppCompatActivity.MODE_PRIVATE
     )
     val sdf = SimpleDateFormat(
-        "hh:mm a",
+        "dd MMM yyyy\nhh:mm a",
         sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) }
     )
     sdf.timeZone = TimeZone.getTimeZone("GMT")

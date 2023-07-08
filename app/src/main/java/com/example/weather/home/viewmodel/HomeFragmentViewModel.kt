@@ -17,7 +17,7 @@ import java.net.SocketTimeoutException
 
 class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel() {
     private var _locationStateFlow = MutableStateFlow<ApiState>(ApiState.Loading)
-    val locationStateFlow: StateFlow<ApiState>
+    private val locationStateFlow: StateFlow<ApiState>
         get() = _locationStateFlow
 
 

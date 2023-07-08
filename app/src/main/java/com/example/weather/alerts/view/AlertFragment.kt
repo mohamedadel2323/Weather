@@ -41,7 +41,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-private const val REQUEST_OVERLAY_PERMISSION=5
+private const val REQUEST_OVERLAY_PERMISSION = 5
+
 class AlertFragment : Fragment() {
     private var startCalender: Calendar? = null
     private var endCalender: Calendar? = null
@@ -89,6 +90,20 @@ class AlertFragment : Fragment() {
                 alertAdapter.submitList(alertList.sortedBy { it.startTime }.reversed())
             }
         }
+
+        fragmentAlertBinding.alertsInstructionIb.setOnClickListener {
+            AlertDialog.Builder(requireContext()).apply {
+                setTitle(getString(R.string.tip))
+                setMessage(getString(R.string.alert_instruction))
+                setPositiveButton(
+                    getString(R.string.ok)
+                ) { dialog, _ ->
+                    dialog.cancel()
+                }
+                create().show()
+            }
+        }
+
         fragmentAlertBinding.addAlertFab.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!Settings.canDrawOverlays(context)) {
@@ -128,7 +143,9 @@ class AlertFragment : Fragment() {
                 if (startCalender != null && endCalender != null) {
                     if (alertsViewModel.getLatitude() != 0.0 && alertsViewModel.getLongitude() != 0.0) {
                         startCalender!!.set(Calendar.SECOND, 0)
+                        startCalender!!.set(Calendar.MILLISECOND, 0)
                         endCalender!!.set(Calendar.SECOND, 0)
+                        endCalender!!.set(Calendar.MILLISECOND, 0)
                         val startTime = startCalender!!.timeInMillis
                         val endTime = endCalender!!.timeInMillis
                         var isNotification = false
@@ -145,8 +162,8 @@ class AlertFragment : Fragment() {
                         startCalender = null
                         endCalender = null
                         val inputDate = Data.Builder().apply {
-                            putLong(Constants.START_TIME, startTime)
-                            putLong(Constants.END_TIME, endTime)
+                            putLong(Constants.START_TIME, startTime.div(1000))
+                            putLong(Constants.END_TIME, endTime.div(1000))
                             putDouble(Constants.LATITUDE, alertEntity.latitude)
                             putDouble(Constants.LONGITUDE, alertEntity.longitude)
                             putBoolean(Constants.NOTIFICATION_OPTION, alertEntity.isNotification)
@@ -262,16 +279,16 @@ class AlertFragment : Fragment() {
 
     private fun deleteOnLongClick(alertEntity: AlertEntity) {
         AlertDialog.Builder(requireContext()).apply {
-            setMessage("Confirm Deletion")
+            setMessage(getString(R.string.confirm_deletion))
             setPositiveButton(
-                "Delete"
+                getString(R.string.delete)
             ) { dialog, _ ->
                 alertsViewModel.deleteAlert(alertEntity)
                 workManager.cancelWorkById(alertEntity.id)
                 dialog.cancel()
             }
             setNegativeButton(
-                "Back"
+                getString(R.string.back)
             ) { dialog, _ ->
                 dialog.cancel()
             }

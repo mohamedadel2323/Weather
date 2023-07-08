@@ -1,10 +1,7 @@
 package com.example.weather.home.view
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -105,7 +102,7 @@ class HomeFragment : Fragment() {
                             homeFragmentViewModel.getTemperatureOption()!!,
                             homeFragmentViewModel.getLanguageOption()!!
                         )
-                        getWeather()
+                        getWeatherFromDatabase()
                     } else {
                         getLocationAndWeather()
                     }
@@ -126,8 +123,6 @@ class HomeFragment : Fragment() {
                 getWeatherFromDatabase()
             }
         } else if (locationOption == Constants.MAP) {
-
-
             if (checkConnection(requireContext())) {
                 if (homeFragmentViewModel.getMapFirstTime()) {
                     homeFragmentViewModel.setMapFirstTime()
@@ -150,7 +145,7 @@ class HomeFragment : Fragment() {
                         homeFragmentViewModel.getLanguageOption()!!
                     )
                 }
-                getWeather()
+                getWeatherFromDatabase()
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -177,12 +172,11 @@ class HomeFragment : Fragment() {
                                 homeFragmentViewModel.getTemperatureOption()!!,
                                 homeFragmentViewModel.getLanguageOption()!!
                             )
-                            getWeather()
+                            getWeatherFromDatabase()
                         } else {
                             getLocationAndWeather()
                         }
                     }
-
                 } else {
                     if (favoritePlace != null) {
                         homeFragmentViewModel.getWeather(
@@ -190,7 +184,7 @@ class HomeFragment : Fragment() {
                             homeFragmentViewModel.getTemperatureOption()!!,
                             homeFragmentViewModel.getLanguageOption()!!
                         )
-                        getWeather()
+                        getWeatherFromDatabase()
                     } else {
                         Snackbar.make(
                             requireActivity().findViewById(android.R.id.content),
@@ -272,34 +266,7 @@ class HomeFragment : Fragment() {
 
     private fun getLocationAndWeather() {
         getLastLocation()
-        getWeather()
-
-    }
-
-    private fun getWeather() {
-        lifecycleScope.launch {
-            homeFragmentViewModel.weatherResponseStateFlow.collectLatest {
-                when (it) {
-                    is ApiState.Success -> {
-                        fragmentHomeBinding.weather = it.data?.toWeatherResponseEntity()
-                        hourlyAdapter.submitList(it.data?.hourly)
-                        dailyAdapter.submitList(it.data?.daily)
-                        fragmentHomeBinding.placeTv.text =
-                            it.data?.timezone
-                        Timber.e(it.data?.timezone.toString())
-                        fragmentHomeBinding.homeProgressBar.visibility = View.GONE
-                    }
-                    is ApiState.Failure -> {
-                        Timber.e(it.msg)
-                        fragmentHomeBinding.placeTv.text = resources.getText(R.string.unknown)
-                        fragmentHomeBinding.homeProgressBar.visibility = View.GONE
-                    }
-                    else -> {
-                        fragmentHomeBinding.homeProgressBar.visibility = View.VISIBLE
-                    }
-                }
-            }
-        }
+        getWeatherFromDatabase()
     }
 
     private fun getWeatherFromDatabase() {

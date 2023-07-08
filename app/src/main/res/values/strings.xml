@@ -71,4 +71,14 @@
     <string name="start_time">Start Time:</string>
     <string name="end_time">End Time:</string>
     <string name="description">Description:</string>
+    <string name="confirm_deletion">Confirm Deletion</string>
+    <string name="back">Back</string>
+    <string name="delete">Delete</string>
+    <string name="favorites_instruction">Long click on the favorite place to delete it.</string>
+    <string name="alert_instruction">Long click on the alert to delete it.</string>
+    <string name="tip">Tip</string>
+    <string name="weather_is_fine">Weather is fine</string>
+    <string name="no_event">No Event</string>
+    <string name="weather_alert">Weather Alert</string>
+    <string name="dismiss">Dismiss</string>
 </resources>

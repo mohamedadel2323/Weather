@@ -3,6 +3,7 @@ package com.example.weather.database
 import androidx.room.*
 import com.example.weather.model.pojo.AlertEntity
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 @Dao
 interface AlertDao {
@@ -14,4 +15,7 @@ interface AlertDao {
 
     @Delete
     suspend fun deleteAlert(alert: AlertEntity)
+
+    @Query("DELETE FROM alert WHERE id = :uuid")
+    suspend fun deleteAlertByUuid(uuid: UUID)
 }

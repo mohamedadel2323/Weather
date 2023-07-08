@@ -46,8 +46,8 @@ import timber.log.Timber
 
 class MapsFragment : Fragment() {
     private lateinit var fragmentMapsBinding: FragmentMapsBinding
-    lateinit var mapsFragmentsViewModel: MapsFragmentsViewModel
-    lateinit var mapsFragmentViewModelFactory: MapsFragmentViewModelFactory
+    private lateinit var mapsFragmentsViewModel: MapsFragmentsViewModel
+    private lateinit var mapsFragmentViewModelFactory: MapsFragmentViewModelFactory
     private var locationLatLng: LatLng? = null
     private lateinit var map: GoogleMap
 
@@ -84,7 +84,7 @@ class MapsFragment : Fragment() {
         mapsFragmentsViewModel = ViewModelProvider(
             this,
             mapsFragmentViewModelFactory
-        ).get(MapsFragmentsViewModel::class.java)
+        )[MapsFragmentsViewModel::class.java]
 
         // Initialize the SDK
         if (!Places.isInitialized())
@@ -102,6 +102,7 @@ class MapsFragment : Fragment() {
                         Timber.e(
                             "Place: ${place.name}, ${place.id}, ${place.latLng}"
                         )
+                        locationLatLng = place.latLng
                         showGooglePlaceDialog(place)
                     }
                 } else if (result.resultCode == Activity.RESULT_CANCELED) {

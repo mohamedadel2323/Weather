@@ -9,6 +9,7 @@ import com.example.weather.model.pojo.AlertEntity
 import com.example.weather.model.pojo.FavoritePlace
 import com.example.weather.model.pojo.WeatherResponseEntity
 import kotlinx.coroutines.flow.Flow
+import java.util.UUID
 
 class ConcreteLocalSource(private val context: Context) : LocalSource {
 
@@ -49,5 +50,8 @@ class ConcreteLocalSource(private val context: Context) : LocalSource {
 
     override suspend fun deleteAlert(alert: AlertEntity){
         alertDao.deleteAlert(alert)
+    }
+    override suspend fun deleteAlertByUuid(uuid: UUID){
+        alertDao.deleteAlertByUuid(uuid)
     }
 }

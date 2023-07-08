@@ -58,7 +58,7 @@
             android:textColor="@color/small_text"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/descriptionTv"
+            app:layout_constraintStart_toEndOf="@id/startTimeTv"
             app:layout_constraintTop_toBottomOf="@id/alertDetailsTv" />
 
 
@@ -86,7 +86,7 @@
             android:textColor="@color/small_text"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/descriptionTv"
+            app:layout_constraintStart_toEndOf="@id/startTimeTv"
             app:layout_constraintTop_toBottomOf="@id/senderValueTv" />
 
         <TextView
@@ -113,7 +113,7 @@
             android:textColor="@color/small_text"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/descriptionTv"
+            app:layout_constraintStart_toEndOf="@id/startTimeTv"
             app:layout_constraintTop_toBottomOf="@id/eventValueTv" />
 
         <TextView
@@ -140,45 +140,39 @@
             android:textColor="@color/small_text"
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/descriptionTv"
+            app:layout_constraintStart_toEndOf="@id/startTimeTv"
             app:layout_constraintTop_toBottomOf="@id/startTimeValueTv" />
 
-        <TextView
-            android:id="@+id/descriptionTv"
-            style="@style/TextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/description"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@id/descriptionValueSV"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/descriptionValueSV" />
 
-        <ScrollView
-            android:id="@+id/descriptionValueSV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/descriptionValueCv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical"
+            app:cardBackgroundColor="@color/rv_item"
+            app:cardCornerRadius="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/descriptionTv"
-            app:layout_constraintTop_toBottomOf="@id/endTimeValueTv">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/endTimeTv">
 
-            <TextView
-
-                android:id="@+id/descriptionValueTv"
-                style="@style/TextViewStyle"
+            <ScrollView
+                android:id="@+id/descriptionValueSV"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@{alert.description}"
-                android:textColor="@color/small_text"
-                android:textSize="15sp" />
+                android:layout_height="match_parent"
+                android:padding="16dp">
 
-        </ScrollView>
+                <TextView
+                    android:id="@+id/descriptionValueTv"
+                    style="@style/TextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@{alert.description}"
+                    android:textColor="@color/small_text"
+                    android:textSize="15sp" />
+            </ScrollView>
+        </androidx.cardview.widget.CardView>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="alert"
+            type="com.example.weather.model.pojo.Alert" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/customAlertCv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/purple_700"
+        app:cardCornerRadius="20dp"
+        app:strokeWidth="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp">
+
+            <TextView
+                android:id="@+id/alertDialogTitle"
+                style="@style/TextViewStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:drawableLeft="@drawable/cloud"
+                android:drawablePadding="15dp"
+                android:text="@string/weather_alert"
+                android:textAlignment="viewStart"
+                app:layout_constraintBottom_toTopOf="@id/alertDescriptionCv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/alertDescriptionCv"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                app:cardBackgroundColor="@color/rv_item"
+                app:cardCornerRadius="15dp"
+                app:layout_constraintBottom_toTopOf="@id/dismissBtn"
+                app:layout_constraintEnd_toEndOf="@id/alertDialogTitle"
+                app:layout_constraintStart_toStartOf="@id/alertDialogTitle"
+                app:layout_constraintTop_toBottomOf="@id/alertDialogTitle">
+
+                <ScrollView
+                    android:padding="16dp"
+                    android:id="@+id/alertCardScroll"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/alertDialogDescription"
+                        style="@style/TextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{alert.description}"
+                        android:textColor="@color/small_text_light"
+                        android:textSize="15sp" />
+
+
+                </ScrollView>
+            </androidx.cardview.widget.CardView>
+
+
+            <Button
+                android:id="@+id/dismissBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/item_back"
+                android:text="@string/dismiss"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/alertDescriptionCv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+</layout>
