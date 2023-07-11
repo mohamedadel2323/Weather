@@ -1,10 +1,9 @@
 package com.example.weather.model
 
-import com.example.weather.Constants
-import com.example.weather.database.LocalSource
+import com.example.weather.data.database.LocalSource
 import com.example.weather.model.pojo.*
-import com.example.weather.network.RemoteSource
-import com.example.weather.shared_preferences.SettingsSharedPreferencesSource
+import com.example.weather.data.network.RemoteSource
+import com.example.weather.data.shared_preferences.SettingsSharedPreferencesSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import retrofit2.Response
@@ -89,7 +88,7 @@ class Repository(
         sharedPreferencesSource.setMapFavorite(isFavorite)
     }
 
-    override fun getDetails() = sharedPreferencesSource.getDetails()
+override fun getDetails() = sharedPreferencesSource.getDetails()
 
     override fun setDetails(isDetails: Boolean) {
         sharedPreferencesSource.setDetails(isDetails)

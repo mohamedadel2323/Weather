@@ -7,6 +7,10 @@
         <variable
             name="alert"
             type="com.example.weather.model.pojo.Alert" />
+
+        <variable
+            name="timeZone"
+            type="String" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -37,29 +41,43 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <TextView
+                android:id="@+id/timezoneTv"
+                style="@style/TextViewStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{timeZone}"
+                android:textColor="@color/small_text"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/alertDialogTitle" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/alertDescriptionCv"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
+                android:layout_marginTop="16dp"
                 app:cardBackgroundColor="@color/rv_item"
                 app:cardCornerRadius="15dp"
                 app:layout_constraintBottom_toTopOf="@id/dismissBtn"
                 app:layout_constraintEnd_toEndOf="@id/alertDialogTitle"
                 app:layout_constraintStart_toStartOf="@id/alertDialogTitle"
-                app:layout_constraintTop_toBottomOf="@id/alertDialogTitle">
+                app:layout_constraintTop_toBottomOf="@id/timezoneTv">
 
                 <ScrollView
-                    android:padding="16dp"
                     android:id="@+id/alertCardScroll"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:padding="16dp">
 
                     <TextView
                         android:id="@+id/alertDialogDescription"
                         style="@style/TextViewStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{alert.description}"
+                        android:text="@{alert.event + '\n' + alert.description}"
                         android:textColor="@color/small_text_light"
                         android:textSize="15sp" />
 

@@ -4,6 +4,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.BindingAdapter
 import com.airbnb.lottie.LottieAnimationView
+import com.example.weather.uitils.Constants
 import java.text.SimpleDateFormat
 import java.util.*
 

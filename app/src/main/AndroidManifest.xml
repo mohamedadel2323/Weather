@@ -22,7 +22,7 @@
         android:theme="@style/Theme.Weather"
         tools:targetApi="31">
         <activity
-            android:name=".AlertDetailsActivity"
+            android:name=".ui.view.AlertDetailsActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -48,7 +48,7 @@
             android:value="${googleMapsApiKey}" />
 
         <activity
-            android:name=".view.MainActivity"
+            android:name=".ui.view.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
