@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
-import java.net.SocketTimeoutException
+import timber.log.Timber
 
 class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel() {
     private var _locationStateFlow = MutableStateFlow<ApiState>(ApiState.Loading)
@@ -53,8 +53,9 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
                         _offlineWeatherStateFlow.emit(ApiState.Failure(it.code().toString()))
                     }
                 }
-            } catch (e: SocketTimeoutException) {
-                _offlineWeatherStateFlow.emit(ApiState.Failure(e.localizedMessage ?: ""))
+            } catch (e: Exception) {
+                Timber.e(e.localizedMessage)
+                _offlineWeatherStateFlow.emit(ApiState.Failure("timeOut"))
             }
         }
     }

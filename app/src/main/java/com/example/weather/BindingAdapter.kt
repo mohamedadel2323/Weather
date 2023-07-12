@@ -17,13 +17,33 @@ fun convertTimeStampToDayName(view: TextView, timeStamp: Int?) {
     val sdf =
         SimpleDateFormat("EEEE",
             sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) })
+    val calendar = Calendar.getInstance()
     val date = Date(timeStamp?.times(1000L) ?: 0)
+    calendar.time = date
     val dayOfWeek = sdf.format(date)
-    view.text = dayOfWeek
+    val today = Calendar.getInstance()
+    val tomorrow = Calendar.getInstance()
+    tomorrow.add(Calendar.DAY_OF_YEAR, 1)
+    val dayName = when {
+        calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == today.get(
+            Calendar.DAY_OF_YEAR
+        ) -> {
+            view.context.getString(R.string.today)
+        }
+        calendar.get(Calendar.YEAR) == tomorrow.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == tomorrow.get(
+            Calendar.DAY_OF_YEAR
+        ) -> {
+            view.context.getString(R.string.tomorrow)
+        }
+        else -> {
+            dayOfWeek
+        }
+    }
+    view.text = dayName
 }
 
 @BindingAdapter(value = ["bind:date", "bind:timeOffset"], requireAll = true)
-fun convertTimeStampToCurrentHour(view: TextView, currentDate: Int?, offset:Int?) {
+fun convertTimeStampToCurrentHour(view: TextView, currentDate: Int?, offset: Int?) {
     val sharedPreferences = view.context.getSharedPreferences(
         Constants.PREFERENCES_NAME,
         AppCompatActivity.MODE_PRIVATE
@@ -33,7 +53,7 @@ fun convertTimeStampToCurrentHour(view: TextView, currentDate: Int?, offset:Int?
         sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) }
     )
     sdf.timeZone = TimeZone.getTimeZone("GMT")
-    val date = currentDate?.let { Date(it.times(1000L).plus(offset!!.times(1000L)) ) }
+    val date = currentDate?.let { Date(it.times(1000L).plus(offset!!.times(1000L))) }
     val currentTime = sdf.format(date)
     view.text = currentTime
 }

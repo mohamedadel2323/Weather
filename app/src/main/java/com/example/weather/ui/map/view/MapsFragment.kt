@@ -151,20 +151,31 @@ class MapsFragment : Fragment() {
                 Timber.e(latLng.toString())
                 moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
                 if (checkConnection(requireContext())) {
-                    val geocoderArr =
-                        Geocoder(requireContext()).getFromLocation(
-                            locationLatLng!!.latitude, locationLatLng!!.longitude, 5
-                        )
-                    geocoderArr?.let {
-                        if (geocoderArr.isNotEmpty()) {
-                            Timber.e(it[0].countryName)
-                        } else {
-                            Timber.e("empty")
+                    try {
+                        val geocoderArr =
+                            Geocoder(requireContext()).getFromLocation(
+                                locationLatLng!!.latitude, locationLatLng!!.longitude, 5
+                            )
+                        geocoderArr?.let {
+                            if (geocoderArr.isNotEmpty()) {
+                                Timber.e(it[0].countryName)
+                            } else {
+                                Timber.e("empty")
+                            }
                         }
+                        showDialog(geocoderArr)
+                    } catch (e: Exception) {
+                        Timber.e(e.localizedMessage)
+                        Toast.makeText(requireContext(), getString(R.string.poor_connection), Toast.LENGTH_SHORT)
+                            .show()
                     }
-                    showDialog(geocoderArr)
+
                 } else {
-                    Toast.makeText(requireContext(), getString(R.string.no_connection), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.no_connection),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     Navigation.findNavController(requireView()).navigateUp()
                 }
             }

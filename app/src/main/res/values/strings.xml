@@ -81,4 +81,6 @@
     <string name="no_event">No Event</string>
     <string name="weather_alert">Weather Alert</string>
     <string name="dismiss">Dismiss</string>
+    <string name="poor_connection">Poor Connection</string>
+    <string name="tomorrow">Tomorrow</string>
 </resources>

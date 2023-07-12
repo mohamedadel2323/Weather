@@ -2,6 +2,7 @@ package com.example.weather.ui.home.view
 
 import android.Manifest
 import android.content.Intent
+import android.location.Address
 import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
@@ -276,7 +277,6 @@ class HomeFragment : Fragment() {
                                 }
                             }
                         }
-
                     }
                 }
             } else {
@@ -320,17 +320,25 @@ class HomeFragment : Fragment() {
                 when (apiState) {
                     is ApiState.SuccessOffline -> {
                         fragmentHomeBinding.weather = apiState.data
-                        val geocoderArr =
-                            Geocoder(requireContext()).getFromLocation(
-                                apiState.data?.lat ?: 0.0, apiState.data?.lon ?: 0.0, 5
-                            )
+                        var geoCoderArr : MutableList<Address>? = null
+                        try {
+                            geoCoderArr =
+                                Geocoder(requireContext()).getFromLocation(
+                                    apiState.data?.lat ?: 0.0, apiState.data?.lon ?: 0.0, 5
+                                )
 
-                        var place = if (geocoderArr.isNullOrEmpty()) {
+                        }catch (e: Exception) {
+                            Timber.e(e.localizedMessage)
+                            Toast.makeText(requireContext(), getString(R.string.poor_connection), Toast.LENGTH_SHORT)
+                                .show()
+                        }
+
+                        var place = if (geoCoderArr.isNullOrEmpty()) {
                             apiState.data?.timezone
                         } else {
-                            ("${geocoderArr[0]?.locality ?: ""}-" +
-                                    "${geocoderArr[0]?.adminArea ?: ""}-" +
-                                    (geocoderArr[0]?.countryName ?: ""))
+                            ("${geoCoderArr[0].locality ?: ""}-" +
+                                    "${geoCoderArr[0].adminArea ?: ""}-" +
+                                    (geoCoderArr[0].countryName ?: ""))
                         }
                         if (place != null && place.startsWith('-')) {
                             place = place.substring(1)
@@ -343,6 +351,16 @@ class HomeFragment : Fragment() {
                         fragmentHomeBinding.placeTv.text = place
                         fragmentHomeBinding.homeProgressBar.visibility = View.GONE
 
+                    }
+                    is ApiState.Failure ->{
+                        if (apiState.msg == "timeOut"){
+                            Timber.e("Time out")
+                            Toast.makeText(requireContext(), getString(R.string.poor_connection), Toast.LENGTH_SHORT).show()
+                            withContext(Dispatchers.IO){
+                                getWeatherFromDatabase()
+                            }
+                            fragmentHomeBinding.homeProgressBar.visibility = View.GONE
+                        }
                     }
                     else -> {
                         fragmentHomeBinding.homeProgressBar.visibility = View.VISIBLE

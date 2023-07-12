@@ -80,4 +80,6 @@
     <string name="no_event">لا حدث.</string>
     <string name="weather_alert">تنبيه الطقس</string>
     <string name="dismiss">صرف النظر</string>
+    <string name="poor_connection">الأتصال بالأنترنت ضعيف</string>
+    <string name="tomorrow">غداً</string>
 </resources>

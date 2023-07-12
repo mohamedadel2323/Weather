@@ -2,7 +2,6 @@ package com.example.weather.ui.settings.view
 
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,7 +20,6 @@ import com.example.weather.ui.settings.viewmodel.SettingsFragmentViewModel
 import com.example.weather.ui.settings.viewmodel.SettingsFragmentViewModelFactory
 import com.example.weather.data.shared_preferences.SettingsSharedPreferences
 import com.example.weather.ui.view.MainActivity
-import java.util.*
 
 
 class SettingsFragment : Fragment() {
@@ -105,10 +103,10 @@ class SettingsFragment : Fragment() {
             when (checkedId) {
                 R.id.englishRb -> {
                     settingsFragmentViewModel.setLanguageOption(Constants.ENGLISH)
-                    updateLocal(Locale("en"))
+                    updateLocal()
                 }
                 else -> {
-                    updateLocal(Locale("ar"))
+                    updateLocal()
                     settingsFragmentViewModel.setLanguageOption(Constants.ARABIC)
                 }
             }
@@ -148,9 +146,7 @@ class SettingsFragment : Fragment() {
         }
     }
 
-    private fun updateLocal(locale: Locale){
-//        Locale.setDefault(locale)
-//        requireActivity().recreate()
+    private fun updateLocal(){
         requireActivity().finish()
         startActivity(Intent(requireContext(), MainActivity::class.java))
     }

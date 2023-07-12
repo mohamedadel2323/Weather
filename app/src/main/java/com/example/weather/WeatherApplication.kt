@@ -17,12 +17,12 @@ class WeatherApplication : Application() {
         WorkManager.initialize(this, androidx.work.Configuration.Builder().build())
         if (BuildConfig.DEBUG) {
             Timber.plant(Timber.DebugTree())
-            StrictMode.setThreadPolicy(
-                ThreadPolicy.Builder()
-                    .detectAll()
-                    .penaltyLog()
-                    .build()
-            )
+//            StrictMode.setThreadPolicy(
+//                ThreadPolicy.Builder()
+//                    .detectAll()
+//                    .penaltyLog()
+//                    .build()
+//            )
         }
     }
 }
