@@ -2,6 +2,7 @@ package com.example.weather.ui.home.view
 
 import android.Manifest
 import android.content.Intent
+import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -17,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.*
 import com.example.weather.data.database.ConcreteLocalSource
@@ -67,11 +67,6 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navController = findNavController()
-        if (navController.currentDestination == navController.findDestination(R.id.mapsFragment)
-        ) {
-            navController.navigateUp()
-        }
         homeFragmentViewModelFactory = HomeFragmentViewModelFactory(
             Repository.getInstance(
                 SettingsSharedPreferences.getInstance(requireContext()),
@@ -86,6 +81,63 @@ class HomeFragment : Fragment() {
 
         setHourlyRecycler()
         setDailyRecycler()
+
+        fragmentHomeBinding.swipeRefresh.setOnRefreshListener {
+            if (checkConnection(requireContext())) {
+                if (locationOption == Constants.GPS) {
+                    if (checkPermissions(requireContext())) {
+                        if (isLocationEnabled(requireContext())) {
+                            fragmentHomeBinding.permissionCv.visibility = View.GONE
+                            fragmentHomeBinding.swipeRefresh.visibility = View.VISIBLE
+                            if (favoritePlace != null) {
+                                homeFragmentViewModel.getWeather(
+                                    Location(favoritePlace!!.longitude, favoritePlace!!.latitude),
+                                    homeFragmentViewModel.getTemperatureOption()!!,
+                                    homeFragmentViewModel.getLanguageOption()!!
+                                )
+                                getWeatherFromDatabase()
+                            } else {
+                                getLocationAndWeather()
+                            }
+                        } else {
+                            Snackbar.make(
+                                requireActivity().findViewById(android.R.id.content),
+                                resources.getString(R.string.turn_on_location),
+                                Snackbar.LENGTH_SHORT
+                            ).apply {
+                                setAction(resources.getString(R.string.enable)) {
+                                    Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).apply {
+                                        startActivity(this)
+                                    }
+                                }
+                                show()
+                            }
+                        }
+                    } else {
+                        if (favoritePlace != null) {
+                            homeFragmentViewModel.getWeather(
+                                Location(favoritePlace!!.longitude, favoritePlace!!.latitude),
+                                homeFragmentViewModel.getTemperatureOption()!!,
+                                homeFragmentViewModel.getLanguageOption()!!
+                            )
+                            getWeatherFromDatabase()
+                        }
+                    }
+                } else {
+                    homeFragmentViewModel.getWeather(
+                        Location(
+                            homeFragmentViewModel.getLongitude(),
+                            homeFragmentViewModel.getLatitude()
+                        ),
+                        homeFragmentViewModel.getTemperatureOption()!!,
+                        homeFragmentViewModel.getLanguageOption()!!
+                    )
+                    getWeatherFromDatabase()
+                }
+
+            }
+            fragmentHomeBinding.swipeRefresh.isRefreshing = false
+        }
 
         favoritePlace = if (homeFragmentViewModel.getDetails()) {
             homeFragmentViewModel.setDetails(false)
@@ -106,7 +158,7 @@ class HomeFragment : Fragment() {
                 fusedClient = LocationServices.getFusedLocationProviderClient(requireContext())
                 if (checkPermissions(requireContext())) {
                     fragmentHomeBinding.permissionCv.visibility = View.GONE
-                    fragmentHomeBinding.homeScrollView.visibility = View.VISIBLE
+                    fragmentHomeBinding.swipeRefresh.visibility = View.VISIBLE
                     if (favoritePlace != null) {
                         homeFragmentViewModel.getWeather(
                             Location(favoritePlace!!.longitude, favoritePlace!!.latitude),
@@ -117,13 +169,12 @@ class HomeFragment : Fragment() {
                     } else {
                         getLocationAndWeather()
                     }
-
                 } else {
                     fragmentHomeBinding.permissionBtn.setOnClickListener {
                         requestPermissions()
                     }
                     fragmentHomeBinding.permissionCv.visibility = View.VISIBLE
-                    fragmentHomeBinding.homeScrollView.visibility = View.GONE
+                    fragmentHomeBinding.swipeRefresh.visibility = View.GONE
                 }
             } else {
                 Toast.makeText(
@@ -171,47 +222,14 @@ class HomeFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
-        if (checkConnection(requireContext())) {
-            if (locationOption == Constants.GPS) {
-                if (checkPermissions(requireContext())) {
-                    if (isLocationEnabled(requireContext())) {
-                        fragmentHomeBinding.permissionCv.visibility = View.GONE
-                        fragmentHomeBinding.homeScrollView.visibility = View.VISIBLE
-                        if (favoritePlace != null) {
-                            homeFragmentViewModel.getWeather(
-                                Location(favoritePlace!!.longitude, favoritePlace!!.latitude),
-                                homeFragmentViewModel.getTemperatureOption()!!,
-                                homeFragmentViewModel.getLanguageOption()!!
-                            )
-                            getWeatherFromDatabase()
-                        } else {
-                            getLocationAndWeather()
-                        }
-                    }
-                } else {
-                    if (favoritePlace != null) {
-                        homeFragmentViewModel.getWeather(
-                            Location(favoritePlace!!.longitude, favoritePlace!!.latitude),
-                            homeFragmentViewModel.getTemperatureOption()!!,
-                            homeFragmentViewModel.getLanguageOption()!!
-                        )
-                        getWeatherFromDatabase()
-                    } else {
-                        Snackbar.make(
-                            requireActivity().findViewById(android.R.id.content),
-                            resources.getString(R.string.turn_on_location),
-                            Snackbar.LENGTH_SHORT
-                        ).apply {
-                            setAction(resources.getString(R.string.enable)) {
-                                Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS).apply {
-                                    startActivity(this)
-                                }
-                            }
-                            show()
-                        }
-                    }
-                }
-            }
+        if (checkPermissions(requireContext())) {
+            fragmentHomeBinding.permissionCv.visibility = View.GONE
+            fragmentHomeBinding.swipeRefresh.visibility = View.VISIBLE
+        }
+        val navController = findNavController()
+        if (navController.currentDestination == navController.findDestination(R.id.mapsFragment)
+        ) {
+            navController.navigateUp()
         }
     }
 
@@ -287,10 +305,21 @@ class HomeFragment : Fragment() {
                 when (apiState) {
                     is ApiState.SuccessOffline -> {
                         fragmentHomeBinding.weather = apiState.data
+                        val geocoderArr =
+                            Geocoder(requireContext()).getFromLocation(
+                                apiState.data?.lat?:0.0, apiState.data?.lon?:0.0, 5
+                            )
+
+                        val place = if (geocoderArr.isNullOrEmpty()) {
+                            apiState.data?.timezone
+                        } else {
+                            ("${geocoderArr[0]?.locality ?: ""}-" +
+                                    "${geocoderArr[0]?.adminArea ?: ""}-" +
+                                    (geocoderArr[0]?.countryName ?: ""))
+                        }
                         hourlyAdapter.submitList(apiState.data?.hourly)
                         dailyAdapter.submitList(apiState.data?.daily)
-                        fragmentHomeBinding.placeTv.text =
-                            apiState.data?.timezone ?: resources.getString(R.string.unknown)
+                        fragmentHomeBinding.placeTv.text = place
                         fragmentHomeBinding.homeProgressBar.visibility = View.GONE
 
                     }

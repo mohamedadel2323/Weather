@@ -130,6 +130,7 @@ class AlertWorker(private val context: Context, private val workerParameters: Wo
                 alertMediaPlayer.stop()
             }
             setView(alertCustomAlertViewBinding.root)
+            setCancelable(false)
 
             alertCustomAlertViewBinding.alert = alert
             alertCustomAlertViewBinding.timeZone = timezone
@@ -138,7 +139,6 @@ class AlertWorker(private val context: Context, private val workerParameters: Wo
                 CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.IO) {
                         repository.deleteAlertByUuid(workerParameters.id)
-
                     }
                 }
                 dismiss()
@@ -156,6 +156,9 @@ class AlertWorker(private val context: Context, private val workerParameters: Wo
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     delay(30000)
+                    withContext(Dispatchers.IO){
+                        repository.deleteAlertByUuid(workerParameters.id)
+                    }
                     withContext(Dispatchers.Main) {
                         dismiss()
                     }

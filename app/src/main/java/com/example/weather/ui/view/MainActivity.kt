@@ -2,6 +2,7 @@ package com.example.weather.ui.view
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
@@ -13,18 +14,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
-import com.example.weather.uitils.Constants
 import com.example.weather.R
-import com.example.weather.uitils.createNotificationChannel
 import com.example.weather.data.database.ConcreteLocalSource
 import com.example.weather.databinding.ActivityMainBinding
 import com.example.weather.databinding.CustomSettingsDialogBinding
 import com.example.weather.model.Repository
 import com.example.weather.data.network.ApiClient
 import com.example.weather.data.shared_preferences.SettingsSharedPreferences
-import com.example.weather.uitils.updateLocale
 import com.example.weather.ui.viewmodel.MainActivityViewModel
 import com.example.weather.ui.viewmodel.MainActivityViewModelFactory
+import com.example.weather.uitils.*
 import java.util.Locale
 
 const val My_LOCATION_PERMISSION_ID = 5005
@@ -64,8 +63,13 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun attachBaseContext(newBase: Context) {
-        val context = updateLocale(newBase, Locale.getDefault())
-        super.attachBaseContext(context)
+        val sharedPreferences = newBase.getSharedPreferences(
+            Constants.PREFERENCES_NAME,
+            MODE_PRIVATE
+        )
+        val localeToSwitchTo = Locale(sharedPreferences.getString(Constants.LANGUAGE,"en"))
+        val localeUpdatedContext: ContextWrapper = ContextUtils.updateLocale(newBase, localeToSwitchTo)
+        super.attachBaseContext(localeUpdatedContext)
     }
 
 

@@ -51,26 +51,12 @@ fun WeatherResponse.toWeatherResponseEntity() = WeatherResponseEntity(
 )
 
 fun updateLocale(context: Context, locale: Locale): ContextWrapper {
-    var mContext = context
     val configuration = context.resources.configuration
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        val localeList = LocaleList(locale)
-        LocaleList.setDefault(localeList)
-        configuration.setLocales(localeList)
-        configuration.setLayoutDirection(locale)
-    } else {
-        configuration.apply {
-            setLocale(locale)
-            setLayoutDirection(locale)
-        }
+    configuration.apply {
+        setLocale(locale)
+        setLayoutDirection(locale)
     }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-        mContext = context.createConfigurationContext(configuration)
-
-    } else {
-        context.resources.updateConfiguration(configuration, context.resources.displayMetrics)
-    }
+    val mContext = context.createConfigurationContext(configuration)
     return ContextWrapper(mContext)
 }
 

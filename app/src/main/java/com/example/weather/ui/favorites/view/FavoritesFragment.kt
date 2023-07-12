@@ -1,10 +1,13 @@
 package com.example.weather.ui.favorites.view
 
 import android.app.AlertDialog
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +24,7 @@ import com.example.weather.data.network.ApiClient
 import com.example.weather.data.shared_preferences.SettingsSharedPreferences
 import com.example.weather.ui.favorites.viewmodel.FavoritesFragmentViewModel
 import com.example.weather.ui.favorites.viewmodel.FavoritesFragmentViewModelFactory
+import com.example.weather.uitils.checkConnection
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -41,6 +45,7 @@ class FavoritesFragment : Fragment(), OnFavoriteLongClick {
         return fragmentFavoritesBinding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         favoritesAdapter = FavoritesAdapter(this) { showDetails(it) }
@@ -101,11 +106,17 @@ class FavoritesFragment : Fragment(), OnFavoriteLongClick {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun showDetails(favoritePlace: FavoritePlace) {
-        favoritesFragmentViewModel.setDetails(true)
-        Navigation.findNavController(requireView()).navigate(
-            FavoritesFragmentDirections.actionFavoritesFragmentToHomeFragment(favoritePlace)
-        )
+        if (checkConnection(requireContext())) {
+            favoritesFragmentViewModel.setDetails(true)
+            Navigation.findNavController(requireView()).navigate(
+                FavoritesFragmentDirections.actionFavoritesFragmentToHomeFragment(favoritePlace)
+            )
+        } else {
+            Toast.makeText(requireContext(), getString(R.string.no_connection), Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     override fun onFavoriteLongClick(favoritePlace: FavoritePlace) {

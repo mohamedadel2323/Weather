@@ -12,31 +12,6 @@ import java.util.Locale
 
 
 class WeatherApplication : Application() {
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-        val sharedPreferences = getSharedPreferences(Constants.PREFERENCES_NAME, MODE_PRIVATE)
-        val locale = sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) }
-        if (locale != null) {
-            Locale.setDefault(locale)
-        }
-        val configuration = resources.configuration
-        configuration.setLocale(locale)
-        resources.updateConfiguration(configuration, resources.displayMetrics)
-
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val sharedPreferences = getSharedPreferences(Constants.PREFERENCES_NAME, MODE_PRIVATE)
-        val locale = sharedPreferences.getString(Constants.LANGUAGE, "en")?.let { Locale(it) }
-        if (locale != null) {
-            Locale.setDefault(locale)
-        }
-        val configuration = resources.configuration
-        configuration.setLocale(locale)
-        resources.updateConfiguration(configuration, resources.displayMetrics)
-    }
-
     override fun onCreate() {
         super.onCreate()
         WorkManager.initialize(this, androidx.work.Configuration.Builder().build())
