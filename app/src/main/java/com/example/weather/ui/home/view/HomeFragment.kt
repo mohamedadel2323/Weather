@@ -37,6 +37,7 @@ import com.example.weather.uitils.checkPermissions
 import com.example.weather.uitils.isLocationEnabled
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -149,6 +150,11 @@ class HomeFragment : Fragment() {
         if (favoritePlace != null) {
             Timber.e(favoritePlace.toString())
             fragmentHomeBinding.homeTitleTv.text = resources.getText(R.string.favorites)
+            val bottomNavigationView =
+                requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigation)
+            if (bottomNavigationView != null) {
+                bottomNavigationView.visibility = View.GONE
+            }
         }
 
         locationOption = homeFragmentViewModel.getLocationOption()
@@ -233,6 +239,15 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        val bottomNavigationView =
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottomNavigation)
+        if (bottomNavigationView != null) {
+            bottomNavigationView.visibility = View.VISIBLE
+        }
+    }
+
 
     private fun getLastLocation() {
         if (checkPermissions(requireContext())) {
@@ -307,15 +322,21 @@ class HomeFragment : Fragment() {
                         fragmentHomeBinding.weather = apiState.data
                         val geocoderArr =
                             Geocoder(requireContext()).getFromLocation(
-                                apiState.data?.lat?:0.0, apiState.data?.lon?:0.0, 5
+                                apiState.data?.lat ?: 0.0, apiState.data?.lon ?: 0.0, 5
                             )
 
-                        val place = if (geocoderArr.isNullOrEmpty()) {
+                        var place = if (geocoderArr.isNullOrEmpty()) {
                             apiState.data?.timezone
                         } else {
                             ("${geocoderArr[0]?.locality ?: ""}-" +
                                     "${geocoderArr[0]?.adminArea ?: ""}-" +
                                     (geocoderArr[0]?.countryName ?: ""))
+                        }
+                        if (place != null && place.startsWith('-')) {
+                            place = place.substring(1)
+                        }
+                        if (place != null && place.endsWith('-')) {
+                            place = place.substring(0, place.length - 1)
                         }
                         hourlyAdapter.submitList(apiState.data?.hourly)
                         dailyAdapter.submitList(apiState.data?.daily)
