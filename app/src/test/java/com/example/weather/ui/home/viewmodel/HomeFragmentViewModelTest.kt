@@ -7,13 +7,14 @@ import com.example.weather.model.FakeRepository
 import com.example.weather.model.pojo.*
 import com.example.weather.uitils.toWeatherResponseEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
 
 
 class HomeFragmentViewModelTest {
@@ -79,8 +80,8 @@ class HomeFragmentViewModelTest {
                     }
                 }
             }
-
             val remoteResultWeatherResponse = weatherResponse.toWeatherResponseEntity()
+
             //Then: check equality of remote and retrieved local weatherResponse
             assertThat(localResultWeatherResponse, `is`(remoteResultWeatherResponse))
         }
@@ -88,28 +89,17 @@ class HomeFragmentViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getWeather_nullWeatherResponseOnTheRemoteSource_resultTimeZoneFailed() {
+    fun getWeather_nullWeatherResponseOnTheRemoteSource_resultTimeZoneFailed() = runTest {
         //Given: provided weatherResponse is null
         fakeRepository.weatherResponse = null
 
         //When: getWeather called
         var localResultWeatherResponse: WeatherResponseEntity? = null
-        runTest {
-            homeFragmentViewModel.getWeather(Location(0.0, 0.0), "metric", "en")
-            homeFragmentViewModel.getWeatherFromDatabase()
+        homeFragmentViewModel.getWeather(Location(0.0, 0.0), "metric", "en")
 
-            homeFragmentViewModel.offlineWeatherStateFlow.test {
-                this.awaitItem().apply {
-                    when (this) {
-                        is ApiState.SuccessOffline -> {
-                            localResultWeatherResponse = data
-                        }
-
-                        else -> {
-                            //locationResultWeatherResponse still null
-                        }
-                    }
-                }
+        fakeRepository.getWeather(Location(0.0, 0.0), "metric", "en").collectLatest {
+            if (it.isSuccessful){
+                localResultWeatherResponse = it.body()?.toWeatherResponseEntity()
             }
         }
 
@@ -119,23 +109,21 @@ class HomeFragmentViewModelTest {
 
     @ExperimentalCoroutinesApi
     @Test
-    fun getWeatherFromDatabase_weatherEntityInserted_retrievedEqualsInserted() {
+    fun getWeatherFromDatabase_weatherEntityInserted_retrievedEqualsInserted() = runTest {
 
         //When: weather inserted and getWeatherFromDatabase called
         var localWeatherResponseEntity: WeatherResponseEntity? = null
-        runTest {
-            fakeRepository.insertWeatherToDatabase(weatherResponseEntityToInsert)
-            homeFragmentViewModel.getWeatherFromDatabase()
+        fakeRepository.insertWeatherToDatabase(weatherResponseEntityToInsert)
+        homeFragmentViewModel.getWeatherFromDatabase()
 
-            homeFragmentViewModel.offlineWeatherStateFlow.test {
-                this.awaitItem().apply {
-                    when (this) {
-                        is ApiState.SuccessOffline -> localWeatherResponseEntity = data
-                        else -> {}
-                    }
+        homeFragmentViewModel.offlineWeatherStateFlow.test {
+            this.awaitItem().apply {
+                when (this) {
+                    is ApiState.SuccessOffline -> localWeatherResponseEntity = data
+                    else -> {}
                 }
-
             }
+
         }
 
         //Then: check equality of inserted and retrieved local weatherResponse

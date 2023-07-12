@@ -41,7 +41,7 @@ class HomeFragmentViewModel(private val repository: RepoInterface) : ViewModel()
     }
 
     fun getWeather(location: Location, unit: String, language: String) {
-        viewModelScope.launch(Dispatchers.Main) {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 repository.getWeather(location, unit, language).catch {
                     _offlineWeatherStateFlow.emit(ApiState.Failure(it.localizedMessage ?: ""))
